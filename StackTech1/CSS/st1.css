@@ -1,5 +1,8 @@
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
 body {
-  height: 100vh;
   box-sizing: border-box;
   font: bold 16px/25px "Trebuchet MS", Sans-Serif;
   background-color: cornsilk;
