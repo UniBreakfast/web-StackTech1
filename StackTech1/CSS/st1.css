@@ -17,12 +17,14 @@ input {
   margin: 30px 20px 10px;
   font: 16px/20px "Trebuchet MS", Sans-Serif;
   border: 2px solid #444;
+  font: Arial;
   border-radius: 23px;
   cursor: text;
 }
 input::placeholder {
   text-align: center;
 }
+/* TODO hover and active */
 button {
   padding: 4px 15px;
   margin: 10px 40px;

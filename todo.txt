@@ -1,0 +1,9 @@
+[ ]  buttons hover and active effects{{"_file":"N:/web-StackTech1/StackTech1/CSS/st1.css"}}
+[ ]  input on Enter to 'click' store button{{"_file":"N:/web-StackTech1/StackTech1/JS/st1buttons.js"}}
+
+# CSS
+[ ]  buttons hover and active effects{{"_file":"N:/web-StackTech1/StackTech1/CSS/st1.css"}}
+
+# JS
+[ ]  input on Enter to 'click' store button{{"_file":"N:/web-StackTech1/StackTech1/JS/st1buttons.js"}}
+
