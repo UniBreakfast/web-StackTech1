@@ -13,4 +13,7 @@ c.btn_store.onclick = () => {
   }
   else alert('nothing to store, input new record in the field');
 }
-c.btn_get.onclick   = () => f.GET( 'get.txt', alert, 'get2');
+//c.btn_get.onclick = () => f.GET( 'get.txt', alert, 'get2');
+//c.btn_get.onclick = () => f.GET( 'PHP/get.php', alert, 'get2');
+//c.btn_get.onclick = () => f.GET( 'PHP/get.php', (echo)=>console.log(JSON.parse(echo)), 'get2');
+c.btn_get.onclick = () => f.GET( 'PHP/get.php', (echo)=>console.log(JSON.parse(echo)), 'get2');

@@ -7,3 +7,4 @@
     echo "Added record: '$record'";
   }
   else echo "No record provided - none added";
+?>
