@@ -8,9 +8,9 @@ const c = {
 c.btn_store.onclick = () => {
   const str = c.inp.value;
   if (str!=='') {
-    f.POST('StackTech1/PHP/store.php?record='+str, alert, 'no PHP installed');
+    f.POST('PHP/store.php?record='+str, alert, 'no PHP installed');
     c.inp.value = '';
   }
   else alert('nothing to store, input new record in the field');
 }
-c.btn_get.onclick   = () => f.GET( 'StackTech1/get.txt', alert, 'get2');
+c.btn_get.onclick   = () => f.GET( 'get.txt', alert, 'get2');
