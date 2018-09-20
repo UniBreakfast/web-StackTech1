@@ -24,11 +24,21 @@ input::placeholder {
 /* TODO hover and active */
 button {
   padding: 4px 15px;
-  margin: 10px 40px;
+  margin: 10px 30px;
   font: bold 16px/20px "Trebuchet MS", Sans-Serif;
   border: 2px solid #444;
   border-radius: 23px;
   cursor: pointer;
+  box-shadow: 0 6px #505050;
+}
+button:hover {
+  background: #666666;
+  color: white;
+}
+button:active {
+/*  background: #3e8e41;*/
+  box-shadow: 0 2px #505050;
+  transform: translateY(4px);
 }
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-thumb { background: #444; }

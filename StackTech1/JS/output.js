@@ -6,5 +6,5 @@ function output(element, headerows){
       '<span class=record>'+item[0]+'</span>&nbsp'+
       '<span class=date>'  +item[1]+'</span>'+
     '</div></li>');
-  element.outerHTML = '<ol>'+html+'</ol>';
+  element.innerHTML = html;
 }
