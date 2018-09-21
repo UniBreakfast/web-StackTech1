@@ -1,5 +1,6 @@
 ol {
   width: 500px;
+  max-width: 85%;
   height: 245px;
   overflow-y: auto;
   padding-right:  2px;
