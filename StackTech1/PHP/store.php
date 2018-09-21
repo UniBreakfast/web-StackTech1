@@ -4,7 +4,6 @@
     $record = trim($_REQUEST['record']);
     $query = "INSERT test_list (record) VALUES ('$record')";
     mysqli_query($db, $query) or exit ('INSERT record Query failed');
-    echo "Added record: '$record'";
   }
   else echo "No record provided - none added";
 ?>

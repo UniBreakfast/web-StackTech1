@@ -4,9 +4,14 @@ const f = {
     const request = new XMLHttpRequest();
     request.open(type, url, true);
     request.onload = () => {
-      if (request.status >= 200 && request.status < 400 && !request.response.startsWith('<?php'))
-        callback(request.response);
-      else fallcb? fallcb(falldata) : callback(falldata);
+      if (callback) {
+        if (request.status >= 200 && request.status < 400 && !request.response.startsWith('<?php')) {
+          if (request.response !== '') callback(request.response);
+          else callback();
+        }
+        else falldata ? callback(falldata) : callback();
+      }
+      else if (fallcb) falldata ? fallcb(falldata) : fallcb();
     }
     request.send();
   }
