@@ -21,7 +21,6 @@ input {
 input::placeholder {
   text-align: center;
 }
-/* TODO hover and active */
 button {
   padding: 4px 15px;
   margin: 10px 30px;

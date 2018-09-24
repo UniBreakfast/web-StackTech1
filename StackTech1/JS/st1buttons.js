@@ -1,6 +1,6 @@
   // control elements container object
 const c = {
-  inp:       document.body.children[3], // TODO input on Enter
+  inp:       document.body.children[3],
   btn_store: document.body.children[4],
   btn_get:   document.body.children[5],
   btn_clear: document.body.children[6],
