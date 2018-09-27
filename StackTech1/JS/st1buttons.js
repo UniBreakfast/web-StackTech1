@@ -14,7 +14,8 @@ c.inp.onkeydown = e => {
 c.btn_store.onclick = () => {
   const str = c.inp.value;
   if (str!=='') {
-    f.POST('PHP/store.php?record='+str, ()=>c.btn_get.click(), 'no PHP response', alert);
+    f.POST('PHP/store.php?record='+str, ()=>c.btn_get.click(),
+           'no PHP response', alert);
     c.inp.value = '';
   }
   else alert('nothing to store, input new record in the field');
