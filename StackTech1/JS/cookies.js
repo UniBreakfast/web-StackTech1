@@ -48,9 +48,7 @@
         return;
       }
 
-      attributes = extend({
-        path: '/'
-      }, api.defaults, attributes);
+      attributes = extend({path: '/'}, api.defaults, attributes);
 
       if (typeof attributes.expires === 'number') {
         attributes.expires = new Date(new Date() * 1 + attributes.expires * 864e+5);
