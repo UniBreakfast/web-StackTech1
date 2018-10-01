@@ -1,22 +1,19 @@
 ;
-window.Cookies = (function () {
+f.APIcookie = (function () {
   function extend () {
     var result = {};
     for (var i = 0; i < arguments.length; i++) {
-      var attributes = arguments[i];
+      let attributes = arguments[i];
       for (var key in attributes) result[key] = attributes[key];
     }
     return result;
   }
 
-  function decode (s) {
-    return s.replace(/(%[0-9A-Z]{2})+/g, decodeURIComponent);
-  }
-
-  var api = {};
+  const API = {};
+  const decode = s => s.replace(/(%[0-9A-Z]{2})+/g, decodeURIComponent);
 
   function set (key, value, attributes) {
-    attributes = extend({path: '/'}, api.defaults, attributes);
+    attributes = extend({path: '/'}, API.defaults, attributes);
 
     if (typeof attributes.expires === 'number')
       attributes.expires = new Date(new Date()*1 + attributes.expires * 864e+5);
@@ -51,30 +48,27 @@ window.Cookies = (function () {
     var jar = {};
     var cookies = document.cookie ? document.cookie.split('; ') : [];
     for (var i = 0; i < cookies.length; i++) {
-      var parts = cookies[i].split('=');
-      var cookie = parts.slice(1).join('=');
+      let parts = cookies[i].split('=');
+      let cookie = parts.slice(1).join('=');
 
       if (!json && cookie.charAt(0) === '"') cookie = cookie.slice(1, -1);
 
       try {
-        var name = decode(parts[0]);
+        let name = decode(parts[0]);
         cookie = decode(cookie);
-
         if (json) cookie = JSON.parse(cookie);
         jar[name] = cookie;
-
-        if (key === name) break;
       } catch (e) {}
     }
     return key ? jar[key] : jar;
   }
 
-  api.defaults = {};
-  api.set = set;
-  api.get     = function (key) { return get(key, false); };
-  api.getJSON = function (key) { return get(key, true);  };
-  api.remove  = function (key, attributes) {
+  API.defaults = {};
+  API.set      = set;
+  API.get      = key => get(key, false);
+  API.getJSON  = key => get(key, true);
+  API.remove   = (key, attributes) =>
     set(key, '', extend(attributes, { expires: -1 }));
-  };
-  return api;
+
+  return API;
 })();

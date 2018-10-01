@@ -7,16 +7,22 @@
   иначе Если ответ true:
     Если страница login или register то предложить выйти
 
+Варианты I:
+Куки есть
+
+
+
+
+
 */
 
 f.act_on_check = function act_on_check(response) {
   var inside = (location.pathname != "/StackTech1/login.htm" &&
                 location.pathname != "/StackTech1/register.htm");
   if (response === 'valid') {
-    if (!inside) {
-      if (!confirm('You are already logged in. ' +
-                   'Would you like to log out now and proceed to ' +
-                   location.pathname)) location.href = 'inside.htm';
+    if (!inside && !confirm('You are already logged in. ' +
+                            'Would you like to log out now and proceed to ' +
+                            location.pathname)) location.href = 'inside.htm';
     }
   } else if (response === 'invalid') {
     // TODO delete cookie!
