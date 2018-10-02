@@ -1,6 +1,5 @@
 <?php
   require_once $_SERVER['DOCUMENT_ROOT'].'sandbox.php';
-  // FUTURE real MySQL check
   if (isset($_REQUEST['cookie']) && trim($_REQUEST['cookie'])!=='') {
     $cookieString = trim($_REQUEST['cookie']);
     $query = "SELECT token FROM test_token";

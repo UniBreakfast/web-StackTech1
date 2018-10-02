@@ -1,11 +1,20 @@
 <?php
-  require_once $_SERVER['DOCUMENT_ROOT'].'sandbox.php';
-  // FUTURE real MySQL check
-  if (isset($_REQUEST['cookie']) && trim($_REQUEST['cookie'])!=='') {
-    $cookieString = trim($_REQUEST['cookie']);
-    //$query = "INSERT test_list (record) VALUES ('$record')";
-    //mysqli_query($db, $query) or exit ('INSERT record Query failed');
-    echo 'logged out';
+require_once $_SERVER['DOCUMENT_ROOT'].'sandbox.php';
+if (isset($_REQUEST['cookie']) && trim($_REQUEST['cookie'])!=='') {
+  $cookieString = trim($_REQUEST['cookie']);
+
+  $query = "SELECT token FROM test_token";
+  $result = mysqli_query($db, $query)
+    or exit ('SELECT token FROM test_token Query failed');
+  list($token) = mysqli_fetch_row($result);
+
+  if ($cookieString == $token) {
+    $query = "DELETE FROM test_token";
+    mysqli_query($db, $query) or exit ('DELETE FROM test_token Query failed');
+    echo 'token deleted, user logged out';
   }
-  else echo 'no cookie to log out';
+  else echo 'no token found';
+}
+else echo 'no cookie provided for deletion';
 ?>
+
