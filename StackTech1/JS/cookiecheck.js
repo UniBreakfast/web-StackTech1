@@ -35,15 +35,36 @@
 */
 
   // function to Check On Load and Act accordingly
-f.COLA = function check_on_load_and_act_accord(response) {
+f.COLA = function check_on_load_and_act_accord() {
   var inside = (location.pathname != "/StackTech1/login.htm" &&
                 location.pathname != "/StackTech1/register.htm");
   var user = f.APIcookie.get('user');
-  if (inside && user===undefined) location.href = 'login.htm';
+  if (user===undefined) {
+    if (inside) location.replace('login.htm');
+  }
   else {
-    const  incb = function  inside_callback(response) {}
-    const outcb = function outside_callback(response) {}
-    f.POST('PHP/cookiecheck.php?cookie='+user, inside? incb : outcb);
+    const incb = function inside_callback(response) {
+      if (response == 'invalid') {
+        f.APIcookie.remove('user');
+        location.replace('login.htm');
+      }
+      else if (response !== 'valid') alert(response);
+    }
+
+    const outcb = function outside_callback(response) {
+      if (response == 'valid') {
+        if (!confirm('You are already logged in. ' +
+                     'Would you like to log out now and proceed to ' +
+                     location.pathname)) location.replace('inside.htm');
+        else f.APIcookie.remove('user');
+      }
+      else if (response == 'invalid') {
+        f.POST('PHP/logout.php?cookie='+user);
+        f.APIcookie.remove('user');
+      }
+    }
+    const reportcb = response => alert(response);
+    f.POST('PHP/cookiecheck.php?cookie='+user, inside? incb : outcb, reportcb);
   }
 }
 
