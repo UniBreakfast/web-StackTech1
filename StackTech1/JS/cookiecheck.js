@@ -43,9 +43,11 @@ f.COLA = function check_on_load_and_act_accord(response) {
   else {
     const  incb = function  inside_callback(response) {}
     const outcb = function outside_callback(response) {}
-    f.POST('PHP/cookiecheck.php?cookie='+document.cookie, f.act_on_check);
+    f.POST('PHP/cookiecheck.php?cookie='+user, inside? incb : outcb);
   }
+}
 
+/*
   if (response === 'valid') {
     if (!inside && !confirm('You are already logged in. ' +
                             'Would you like to log out now and proceed to ' +
@@ -62,3 +64,6 @@ f.COLA = function check_on_load_and_act_accord(response) {
 
 if (!document.cookie) location.href = 'login.htm';
 else f.POST('PHP/cookiecheck.php?cookie='+document.cookie, f.act_on_check);
+*/
+
+f.COLA();
