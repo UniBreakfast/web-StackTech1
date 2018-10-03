@@ -17,6 +17,8 @@ if (isset($_REQUEST['cookie']) && trim($_REQUEST['cookie'])!=='') {
 
   if (list($id, $dtModify) = mysqli_fetch_row($result))
     if (strtotime($dtModify)+216000 /*2.5days*/ - time() > 0) {
+      require_once $_SERVER['DOCUMENT_ROOT'].'StackTech1/PHP/seq.php';
+      $newToken = tokenGen();
       $query = "UPDATE test_sessions SET token='$newToken' WHERE id=$id";
       mysqli_query($db, $query)
         or exit ('UPDATE test_sessions SET token Query failed');
