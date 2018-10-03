@@ -43,12 +43,16 @@ f.COLA = function check_on_load_and_act_accord() {
     if (inside) location.replace('login.htm');
   }
   else {
-    const incb = function inside_callback(response) {
+    var user_id = user.substring(0, user.indexOf('|'))
+    const incb = function inside_callback(response, new_token) {
+      if (response.includes('|')) [response, new_token] = response.split('|');
       if (response == 'invalid') {
         f.APIcookie.remove('user');
         location.replace('login.htm');
       }
-      else if (response !== 'valid') alert(response);
+      else if (response == 'valid')
+        f.APIcookie.set('user', user_id+'|'+new_token, {expires: 2.5});
+      else alert(response);
     }
 
     const outcb = function outside_callback(response) {
