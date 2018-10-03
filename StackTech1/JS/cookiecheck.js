@@ -55,7 +55,7 @@ f.COLA = function check_on_load_and_act_accord() {
       else alert(response);
     }
 
-    const outcb = function outside_callback(response) {
+    const outcb = function outside_callback(response, new_token) {
 
 /*
       if (response == 'valid') {
@@ -74,6 +74,11 @@ f.COLA = function check_on_load_and_act_accord() {
       }
 */
 
+      if (response.includes('|')) [response, new_token] = response.split('|');
+      if (response == 'valid') {
+        user = user_id+'|'+new_token;
+        f.APIcookie.set('user', user, {expires: 2.5});
+      }
       var prompt = 'You are already logged in. ' +
                    'Would you like to log out now and proceed to ' +
                    location.pathname;

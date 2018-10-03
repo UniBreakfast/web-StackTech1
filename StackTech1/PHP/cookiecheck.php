@@ -3,8 +3,8 @@ require_once $_SERVER['DOCUMENT_ROOT'].'sandbox.php';
 //////////////////////////////////////////////////
 //$_REQUEST['cookie'] = '17|Jeronimo';
 //$_REQUEST['cookie'] = '17|Barnaby';
-$newToken = 'Barnaby';
-//$newToken = 'Jeronimo';
+//$newToken = 'Barnaby';
+$newToken = 'Jeronimo';
 //////////////////////////////////////////////////
 if (isset($_REQUEST['cookie']) && trim($_REQUEST['cookie'])!=='') {
   $cookie = trim($_REQUEST['cookie']);
@@ -14,6 +14,7 @@ if (isset($_REQUEST['cookie']) && trim($_REQUEST['cookie'])!=='') {
             WHERE user_id = $userid AND token = '$token'";
   $result = mysqli_query($db, $query)
     or exit ('SELECT token FROM test_sessions Query failed');
+
   if (list($id, $dtModify) = mysqli_fetch_row($result))
     if (strtotime($dtModify)+216000 /*2.5days*/ - time() > 0) {
       $query = "UPDATE test_sessions SET token='$newToken' WHERE id=$id";

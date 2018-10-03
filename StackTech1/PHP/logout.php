@@ -1,19 +1,18 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'].'sandbox.php';
+//////////////////////////////////////////////////
+//$_REQUEST['cookie'] = '17|Jeronimo';
+//$_REQUEST['cookie'] = '17|Barnaby';
+//////////////////////////////////////////////////
 if (isset($_REQUEST['cookie']) && trim($_REQUEST['cookie'])!=='') {
-  $cookieString = trim($_REQUEST['cookie']);
+  $cookie = trim($_REQUEST['cookie']);
+  list($userid, $token) = explode('|', $cookie);
 
-  $query = "SELECT token FROM test_token";
-  $result = mysqli_query($db, $query)
-    or exit ('SELECT token FROM test_token Query failed');
-  list($token) = mysqli_fetch_row($result);
+  $query = "DELETE FROM test_sessions
+            WHERE user_id = $userid AND token = '$token'";
+  mysqli_query($db, $query)
+    or exit ('DELETE FROM test_sessions Query failed');
 
-  if ($cookieString == $token) {
-    $query = "DELETE FROM test_token";
-    mysqli_query($db, $query) or exit ('DELETE FROM test_token Query failed');
-    echo 'token deleted, user logged out';
-  }
-  else echo 'no token found';
 }
 else echo 'no cookie provided for deletion';
 ?>
