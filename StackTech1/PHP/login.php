@@ -25,9 +25,11 @@ if (isset($_REQUEST['login'])     and isset($_REQUEST['password']) and
       or exit ('INSERT user_id, token... Query failed!');
     setcookie('user', "$userid|$token", time()+216000, '/');
     header('Location: ../inside.htm');
-    //echo "valid|$userid|".tokenGen();
   }
-  else echo 'invalid';
+  else {
+    setcookie('check', 'invalid', time()+5, '/');
+    header('Location: ../login.htm');
+  }
 }
 else echo 'No login or password provided'
 

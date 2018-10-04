@@ -39,12 +39,17 @@
     <input size=32 maxlength=32 required name=login    placeholder=login>
     <input size=32 maxlength=32 required name=password placeholder=password
     type=password>
-    <input type=submit value=SUBMIT>
+    <input style=display:inline type=submit value=SUBMIT>
+    <span  style=display:none>login, password or both are incorrect</span>
   </form>
 
   <script src=JS/functions.js  ></script>
   <script src=JS/cookies.js    ></script>
   <script src=JS/cookiecheck.js></script>
+  <script>
+    if (f.APIcookie.get('check')=='invalid')
+      document.forms[0].children[3].style.display = 'inline';
+  </script>
 
 </body>
 </html>
