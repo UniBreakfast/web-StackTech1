@@ -8,7 +8,7 @@ p, ul { margin: 0; }
 ul { padding-left: 20px; }
 input {
   display: block;
-  width: 500px;
+  /*width: 500px;*/
   max-width: 85%;
   padding: 2px 13px;
   margin: 30px 20px 10px;
@@ -21,7 +21,7 @@ input {
 input::placeholder {
   text-align: center;
 }
-button {
+button, input[type=submit] {
   padding: 4px 15px;
   margin: 10px 30px;
   font: bold 16px/20px "Trebuchet MS", Sans-Serif;

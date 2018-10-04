@@ -33,7 +33,7 @@
     НЕТ - Переадресовать на inside.htm
 
 */
-
+//debugger;
   // function to Check On Load and Act accordingly
 f.COLA = function check_on_load_and_act_accord() {
   var inside = (location.pathname != "/StackTech1/login.htm" &&
@@ -44,7 +44,8 @@ f.COLA = function check_on_load_and_act_accord() {
   }
   else {
     var user_id = user.substring(0, user.indexOf('|'))
-    const incb = function inside_callback(response, new_token) {
+    const incb = function inside_callback(response, new_token)
+    {
       if (response.includes('|')) [response, new_token] = response.split('|');
       if (response == 'invalid') {
         f.APIcookie.remove('user');
@@ -92,24 +93,5 @@ f.COLA = function check_on_load_and_act_accord() {
     f.POST('PHP/cookiecheck.php?cookie='+user, inside? incb : outcb, reportcb);
   }
 }
-
-/*
-  if (response === 'valid') {
-    if (!inside && !confirm('You are already logged in. ' +
-                            'Would you like to log out now and proceed to ' +
-                            location.pathname)) location.href = 'inside.htm';
-    }
-  } else if (response === 'invalid') {
-    // TODO delete cookie!
-    if (inside) location.href = 'login.htm';
-  } else {
-    alert('No response from server. Something isn\'t working');
-    location.href = 'auth.htm';
-  }
-}
-
-if (!document.cookie) location.href = 'login.htm';
-else f.POST('PHP/cookiecheck.php?cookie='+document.cookie, f.act_on_check);
-*/
 
 f.COLA();

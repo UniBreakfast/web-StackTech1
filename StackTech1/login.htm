@@ -10,23 +10,40 @@
 </head>
 <body>
   <h1>Stack Tehnologies and Techniques - Authorization</h1>
-  <p>I need to implement simple JS+PHP identification, authorization and verification.</p>
+  <p>I need to implement simple JS+PHP identification,
+    authorization and verification.
+  </p>
   <ul>
-    <li> There should be minimum of 3 pages: register, LOGIN, inside.            </li>
-    <li> Each of them should first check if user logged in (by cookie in db).    </li>
-    <li> login and register should suggest logoff if he is.                      </li>
-    <li> inside should redirect to login if he isn't.                            </li>
-    <li> register should let user to sign up and then login or go login instead. </li>
-    <li> login should let user to login or go register instead.                  </li>
-    <li> insid should let work with sensitive data and log out if need arise.    </li>
+    <li> There should be minimum of 3 pages: register, LOGIN, inside.
+    </li>
+    <li> Each of them should first check if user logged in (by cookie in db).
+    </li>
+    <li> login and register should suggest logoff if he is.
+    </li>
+    <li> inside should redirect to login if he isn't.
+    </li>
+    <li> register should let user to sign up
+      and then login or go login instead.
+    </li>
+    <li> login should let user to login or go register instead.
+    </li>
+    <li> insid should let work with sensitive data and log out if need arise.
+    </li>
   </ul>
 
   <button onclick=location.href='register.htm'>REGISTER</button>
   <button onclick=location.href='login.htm'>   LOGIN   </button>
   <button onclick=location.href='inside.htm'>  INSIDE  </button>
 
+  <form action=PHP/login.php method=post>
+    <input size=32 maxlength=32 required name=login    placeholder=login>
+    <input size=32 maxlength=32 required name=password placeholder=password
+    type=password>
+    <input type=submit value=SUBMIT>
+  </form>
+
   <script src=JS/functions.js  ></script>
-  <script src=JS/cookies.js></script>
+  <script src=JS/cookies.js    ></script>
   <script src=JS/cookiecheck.js></script>
 
 </body>
