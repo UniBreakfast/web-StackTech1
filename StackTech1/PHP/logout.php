@@ -1,9 +1,5 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'].'sandbox.php';
-//////////////////////////////////////////////////
-//$_REQUEST['cookie'] = '17|Jeronimo';
-//$_REQUEST['cookie'] = '17|Barnaby';
-//////////////////////////////////////////////////
 if (isset($_REQUEST['cookie']) && trim($_REQUEST['cookie'])!=='') {
   $cookie = trim($_REQUEST['cookie']);
   list($userid, $token) = explode('|', $cookie);

@@ -3,8 +3,8 @@
 #############################################################
 require_once $_SERVER['DOCUMENT_ROOT'].'sandbox.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'StackTech1/PHP/seq.php';
-if (isset($_REQUEST['login'])     and isset($_REQUEST['password']) and
-     trim($_REQUEST['login'])!=='' and trim($_REQUEST['password'])!=='') {
+if (isset($_REQUEST['login'])      and isset($_REQUEST['password']) and
+     trim($_REQUEST['login'])!=='' and  trim($_REQUEST['password'])!=='') {
   $login    = trim($_REQUEST['login']);
   $password = trim($_REQUEST['password']);
 
