@@ -22,7 +22,7 @@ function hashGen($pass) {
 
 function hashCheck($pass, $hash) {
   if ('$2a$10$'.$hash == crypt($pass, '$2a$10$'.$hash)) return true;
-  else return false;
+  else                                                  return false;
 }
 
 ?>
