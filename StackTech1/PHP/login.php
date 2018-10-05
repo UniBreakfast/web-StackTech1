@@ -30,8 +30,13 @@ if (isset($_REQUEST['login'])      and isset($_REQUEST['password']) and
           or exit ('DELETE FROM test_sessions WHERE id... Query failed!');
       }
 
-      $token = tokenGen();
-      $query = "INSERT test_sessions (user_id, token) VALUE ($userid, '$token')";
+      $addr     = $_SERVER['REMOTE_ADDR'];
+      $addrpart = substr($addr, 0, strrpos($addr, '.'));
+      $agent    = $_SERVER['HTTP_USER_AGENT'];
+      $hash     = hashGen("$addrpart $agent");
+      $token    = tokenGen();
+      $query = "INSERT test_sessions (user_id, token, bfp_hash)
+                VALUE ($userid, '$token', '$hash')";
       mysqli_query($db, $query)
         or exit ('INSERT user_id, token... Query failed!');
       setcookie('user', "$userid|$token", time()+216000, '/');
@@ -49,6 +54,6 @@ if (isset($_REQUEST['login'])      and isset($_REQUEST['password']) and
     header('Location: ../login.htm');
   }
 }
-else echo 'No login or password provided'
+else echo 'No login or password provided';
 
 ?>
