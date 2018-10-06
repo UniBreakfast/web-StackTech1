@@ -44,8 +44,7 @@ f.COLA = function check_on_load_and_act_accord() {
   }
   else {
     var user_id = user.substring(0, user.indexOf('|'))
-    const incb = function inside_callback(response, new_token)
-    {
+    const incb = function inside_callback(response, new_token) {
       if (response.includes('|')) [response, new_token] = response.split('|');
       if (response == 'invalid') {
         f.APIcookie.remove('user');
@@ -57,24 +56,6 @@ f.COLA = function check_on_load_and_act_accord() {
     }
 
     const outcb = function outside_callback(response, new_token) {
-
-/*
-      if (response == 'valid') {
-        var prompt = 'You are already logged in. ' +
-                     'Would you like to log out now and proceed to ' +
-                     location.pathname;
-        if (!confirm(prompt)) location.replace('inside.htm');
-        else {
-          f.POST('PHP/logout.php?cookie='+user);
-          f.APIcookie.remove('user');
-        }
-      }
-      else if (response == 'invalid') {
-        f.POST('PHP/logout.php?cookie='+user);
-        f.APIcookie.remove('user');
-      }
-*/
-
       if (response.includes('|')) [response, new_token] = response.split('|');
       if (response == 'valid') {
         user = user_id+'|'+new_token;
@@ -84,13 +65,13 @@ f.COLA = function check_on_load_and_act_accord() {
                    'Would you like to log out now and proceed to ' +
                    location.pathname;
       if (response == 'invalid' || (response == 'valid' && confirm(prompt))) {
-        f.POST('PHP/logout.php?cookie='+user);
+        f.POST('Auth/PHP/logout.php?cookie='+user);
         f.APIcookie.remove('user');
       }
       else if (response == 'valid') location.replace('inside.htm');
     }
     const reportcb = response => alert(response);
-    f.POST('PHP/cookiecheck.php?cookie='+user, inside? incb : outcb, reportcb);
+    f.POST('Auth/PHP/ifsession.php?cookie='+user, inside? incb : outcb, reportcb);
   }
 }
 

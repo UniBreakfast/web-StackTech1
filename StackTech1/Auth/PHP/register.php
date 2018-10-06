@@ -1,6 +1,6 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'].'sandbox.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'StackTech1/PHP/seq.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'StackTech1/Auth/PHP/seq.php';
 if (isset($_REQUEST['login'])     and isset($_REQUEST['password']) and
      trim($_REQUEST['login'])!=='' and trim($_REQUEST['password'])!=='') {
   $login    = trim($_REQUEST['login']);
@@ -13,7 +13,7 @@ if (isset($_REQUEST['login'])     and isset($_REQUEST['password']) and
   if (list($userid)=mysqli_fetch_row($result)) {
     setcookie('login',   $login,   time()+5, '/');
     setcookie('check', 'occupied', time()+5, '/');
-    header('Location: ../register.htm');
+    header('Location: ../../register.htm');
   }
   else {
     $hash = hashGen($password);
@@ -22,7 +22,7 @@ if (isset($_REQUEST['login'])     and isset($_REQUEST['password']) and
       or exit ('INSERT test_users... Query failed!');
 
     setcookie('login', $login, time()+5, '/');
-    header('Location: ../login.htm');
+    header('Location: ../../login.htm');
   }
 }
 else echo 'No login or password provided'

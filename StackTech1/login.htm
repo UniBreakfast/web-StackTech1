@@ -30,22 +30,21 @@
   </ul>
 
   <button onclick=location.href='register.htm'>REGISTER</button>
-  <button onclick=location.href='login.htm'>   LOGIN   </button>
   <button onclick=location.href='inside.htm'>  INSIDE  </button>
 
-  <form action=PHP/login.php method=post>
+  <form action=Auth/PHP/login.php method=post>
     <input size=32 maxlength=32 required name=login    placeholder=login>
     <input size=32 maxlength=32 required name=password placeholder=password
     type=password>
     <input style=display:inline type=checkbox onclick=show_pass()> show password <br>
-    <input style=display:inline type=submit value="SIGN IN">
+    <input style=display:inline type=submit value="LOG IN">
     <span  style=display:none> login not found    </span>
     <span  style=display:none> incorrect password </span>
   </form>
 
-  <script src=JS/functions.js  ></script>
-  <script src=JS/cookies.js    ></script>
-  <script src=JS/cookiecheck.js></script>
+  <script src=Common/JS/functions.js></script>
+  <script src=Common/JS/cookies.js  ></script>
+  <script src=Auth/JS/ifsession.js  ></script>
   <script>
     if (f.APIcookie.get('check')=='wrong_login')
       document.forms[0].children[5].style.display = 'inline';

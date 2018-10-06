@@ -29,22 +29,21 @@
     </li>
   </ul>
 
-  <button onclick=location.href='register.htm'>REGISTER</button>
-  <button onclick=location.href='login.htm'>   LOGIN   </button>
+  <button onclick=location.href='login.htm'>   LOG IN  </button>
   <button onclick=location.href='inside.htm'>  INSIDE  </button>
 
-  <form action=PHP/register.php method=post>
+  <form action=Auth/PHP/register.php method=post>
     <input size=32 maxlength=32 required name=login    placeholder="new login">
     <input size=32 maxlength=32 required name=password placeholder="new password"
            type=password>
     <input style=display:inline type=checkbox onclick=show_pass()> show password <br>
-    <input style=display:inline type=submit value="SIGN UP">
+    <input style=display:inline type=submit value=REGISTER>
     <span  style=display:none> this login is already occupied </span>
   </form>
 
-  <script src=JS/functions.js  ></script>
-  <script src=JS/cookies.js    ></script>
-  <script src=JS/cookiecheck.js></script>
+  <script src=Common/JS/functions.js></script>
+  <script src=Common/JS/cookies.js  ></script>
+  <script src=Auth/JS/ifsession.js  ></script>
   <script>
     if (f.APIcookie.get('check')=='occupied') {
       document.forms[0].children[5].style.display = 'inline';

@@ -1,7 +1,7 @@
 <?php
 //$_REQUEST['cookie'] = ''
 require_once $_SERVER['DOCUMENT_ROOT'].'sandbox.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'StackTech1/PHP/seq.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'StackTech1/Auth/PHP/seq.php';
 if (isset($_REQUEST['cookie']) and trim($_REQUEST['cookie'])!=='') {
   $cookie = trim($_REQUEST['cookie']);
   list($userid, $token) = explode('|', $cookie);
@@ -18,7 +18,7 @@ if (isset($_REQUEST['cookie']) and trim($_REQUEST['cookie'])!=='') {
   if (list($id, $hash, $dtModify) = mysqli_fetch_row($result))
     if (hashCheck($bfp, $hash) and
         strtotime($dtModify)+216000 /*2.5days*/ - time() > 0) {
-      require_once $_SERVER['DOCUMENT_ROOT'].'StackTech1/PHP/seq.php';
+      require_once $_SERVER['DOCUMENT_ROOT'].'StackTech1/Auth/PHP/seq.php';
       $newToken = tokenGen();
       $query = "UPDATE test_sessions SET token='$newToken' WHERE id=$id";
       mysqli_query($db, $query)
