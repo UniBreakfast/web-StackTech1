@@ -1,43 +1,6 @@
-/*
-Если есть cookie, отправить его в usercheck.php и получить ответ,
-если нету, считать, что ответ false.
-
-  Если ответ false:
-    Если страница не login или register то редирект на login.
-  иначе Если ответ true:
-    Если страница login или register то предложить выйти
-
-Варианты обстоятельств:
-  Страницы внутренние
-  Страницы внешние
-
-Варианты ситуации:
-  Куки user нет
-    if Страницы внутренние:
-      Переадресовать на login.htm
-
-  Кука user есть
-    if Страницы внутренние:
-      Запросить проверку куки, передав соответствующий колбэк, готовый принять любое из трёх возможных условий.
-    else:
-      Запросить проверку куки, передав другой соответствующий колбэк, готовый принять любое из трёх возможных условий.
-
-Варианты условий:
-  Проверка пройдена успешно
-  Проверка пройдена провально
-  Проверка не получилась (ответ не получен или ответ не один из ожидаемых)
-
-Варианты действий:
-  Сказать, что logged in и предложить выйти
-    ДА - Выполнить logout
-    НЕТ - Переадресовать на inside.htm
-
-*/
-//debugger;
-  // function to Check On Load and Act accordingly
-f.COLA = function check_on_load_and_act_accord() {
-  var inside = (location.pathname != "/StackTech1/login.htm" &&
-                location.pathname != "/StackTech1/register.htm");
+(() => {
+  var inside = (!location.pathname.endsWith('login.htm') &&
+                !location.pathname.endsWith('register.htm'));
   var user = f.APIcookie.get('user');
   if (user===undefined) {
     if (inside) location.replace('login.htm');
@@ -71,8 +34,7 @@ f.COLA = function check_on_load_and_act_accord() {
       else if (response == 'valid') location.replace('inside.htm');
     }
     const reportcb = response => alert(response);
-    f.POST('Auth/PHP/ifsession.php?cookie='+user, inside? incb : outcb, reportcb);
+    f.POST('Auth/PHP/ifsession.php?cookie='+user,
+           inside? incb : outcb, reportcb);
   }
-}
-
-f.COLA();
+})();

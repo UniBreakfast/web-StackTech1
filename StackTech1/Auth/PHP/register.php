@@ -1,12 +1,13 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'].'sandbox.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'StackTech1/Auth/PHP/seq.php';
-if (isset($_REQUEST['login'])     and isset($_REQUEST['password']) and
-     trim($_REQUEST['login'])!=='' and trim($_REQUEST['password'])!=='') {
+require_once 'authvars.php';
+require_once 'seq.php';
+if (isset($_REQUEST['login'])      and isset($_REQUEST['password']) and
+     trim($_REQUEST['login'])!=='' and  trim($_REQUEST['password'])!=='') {
   $login    = trim($_REQUEST['login']);
   $password = trim($_REQUEST['password']);
 
-  $query = "SELECT id FROM test_users
+  $query = "SELECT id FROM $userTable
             WHERE login='$login'";
   $result = mysqli_query($db, $query) or exit ('SELECT id Query failed!');
 
@@ -17,14 +18,13 @@ if (isset($_REQUEST['login'])     and isset($_REQUEST['password']) and
   }
   else {
     $hash = hashGen($password);
-    $query = "INSERT test_users (login, passhash) VALUE ('$login', '$hash')";
+    $query = "INSERT $userTable (login, passhash) VALUE ('$login', '$hash')";
     mysqli_query($db, $query)
-      or exit ('INSERT test_users... Query failed!');
+      or exit ("INSERT $userTable... Query failed!");
 
     setcookie('login', $login, time()+5, '/');
     header('Location: ../../login.htm');
   }
 }
-else echo 'No login or password provided'
-
+else echo 'no login or password provided';
 ?>

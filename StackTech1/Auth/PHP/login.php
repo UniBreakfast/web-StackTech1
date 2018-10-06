@@ -1,33 +1,32 @@
 <?php
-//$_REQUEST['login'] = 'Limi'; $_REQUEST['password'] = 'Ted';
-#############################################################
 require_once $_SERVER['DOCUMENT_ROOT'].'sandbox.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'StackTech1/Auth/PHP/seq.php';
+require_once 'authvars.php';
+require_once 'seq.php';
 if (isset($_REQUEST['login'])      and isset($_REQUEST['password']) and
      trim($_REQUEST['login'])!=='' and  trim($_REQUEST['password'])!=='') {
   $login    = trim($_REQUEST['login']);
   $password = trim($_REQUEST['password']);
 
-  $query = "SELECT id, passhash FROM test_users
+  $query = "SELECT id, passhash FROM $userTable
             WHERE login='$login'";
   $result = mysqli_query($db, $query) or exit ('SELECT id Query failed!');
 
   if (list($userid, $hash)=mysqli_fetch_row($result)) {
-    $query = "DELETE FROM test_sessions
+    $query = "DELETE FROM $sessionTable
               WHERE dt_modify < NOW() - INTERVAL 60 HOUR";
     mysqli_query($db, $query)
-      or exit ('DELETE FROM test_sessions WHERE dt_modify... Query failed!');
+      or exit ("DELETE FROM $sessionTable WHERE dt_modify... Query failed!");
 
     if (hashCheck($password, $hash)) {
-      $query = "SELECT id FROM test_sessions
+      $query = "SELECT id FROM $sessionTable
                 WHERE user_id = $userid ORDER BY dt_create";
       $result = mysqli_query($db, $query)
         or exit ('SELECT id ORDER BY dt_create... Query failed!');
       if (mysqli_num_rows($result)>2) {
         list($id) = mysqli_fetch_row($result);
-        $query = "DELETE FROM test_sessions WHERE id = $id";
+        $query = "DELETE FROM $sessionTable WHERE id = $id";
         mysqli_query($db, $query)
-          or exit ('DELETE FROM test_sessions WHERE id... Query failed!');
+          or exit ("DELETE FROM $sessionTable WHERE id... Query failed!");
       }
 
       $addr     = $_SERVER['REMOTE_ADDR'];
@@ -35,7 +34,7 @@ if (isset($_REQUEST['login'])      and isset($_REQUEST['password']) and
       $agent    = $_SERVER['HTTP_USER_AGENT'];
       $hash     = hashGen("$addrpart $agent");
       $token    = tokenGen();
-      $query = "INSERT test_sessions (user_id, token, bfp_hash)
+      $query = "INSERT $sessionTable (user_id, token, bfp_hash)
                 VALUE ($userid, '$token', '$hash')";
       mysqli_query($db, $query)
         or exit ('INSERT user_id, token... Query failed!');
@@ -54,6 +53,6 @@ if (isset($_REQUEST['login'])      and isset($_REQUEST['password']) and
     header('Location: ../../login.htm');
   }
 }
-else echo 'No login or password provided';
+else echo 'no login or password provided';
 
 ?>
