@@ -34,19 +34,11 @@
 
   <br>
 
-  <button onclick=logout()>LOG OUT</button>
+  <button onclick=location.href='Auth/PHP/logout.php'>LOG OUT</button>
 
   <script src=Common/JS/functions.js></script>
   <script src=Common/JS/cookies.js  ></script>
   <script src=Auth/JS/ifsession.js  ></script>
-  <script>
-    function logout() {
-      var user = f.APIcookie.get('user');
-      f.POST('Auth/PHP/logout.php?cookie='+user);
-      f.APIcookie.remove('user');
-      location.href = 'login.htm';
-    }
-  </script>
 
 </body>
 </html>
