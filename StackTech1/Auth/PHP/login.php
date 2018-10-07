@@ -39,7 +39,7 @@ if (isset($_REQUEST['login'])      and isset($_REQUEST['password']) and
       mysqli_query($db, $query)
         or exit ('INSERT user_id, token... Query failed!');
       setcookie('user', "$userid|$token", time()+216000, '/');
-      header('Location: ../../inside.htm');
+      header("Location: ../../$insidePage");
     }
     else {
       setcookie('login',    $login,    time()+5, '/');
