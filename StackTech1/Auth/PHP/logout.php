@@ -8,7 +8,7 @@ elseif (isset($_COOKIE['user'])) {
   $cookie = $_COOKIE['user'];
   setcookie('user', '', time()-1, '/');
 }
-else exit('no cookie found to log out user');
+else header('Location: ../../login.htm');
 
 list($userid, $token) = explode('|', $cookie);
 

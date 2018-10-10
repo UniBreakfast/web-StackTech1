@@ -31,7 +31,7 @@
         f.POST('Auth/PHP/logout.php?cookie='+user);
         f.APIcookie.remove('user');
       }
-      else if (response == 'valid') location.replace('inside.htm');
+      else if (response == 'valid') location.replace(mainpage);
     }
     const reportcb = response => alert(response);
     f.POST('Auth/PHP/ifsession.php?cookie='+user,
