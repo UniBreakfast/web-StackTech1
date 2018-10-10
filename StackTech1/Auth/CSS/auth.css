@@ -1,14 +1,12 @@
 body {
   box-sizing: border-box;
-  font: bold 16px/25px "Trebuchet MS", Sans-Serif;
+  font: 16px/25px "Trebuchet MS", Sans-Serif;
   background-color: cornsilk;
   margin-left: 20px;
 }
-p, ul { margin: 0; }
-ul { padding-left: 20px; }
+p, { margin: 0; }
 input {
   display: block;
-  /*width: 500px;*/
   max-width: 85%;
   padding: 2px 13px;
   margin: 30px 20px 10px;
@@ -39,7 +37,6 @@ button:hover {
   color: white;
 }
 button:active {
-/*  background: #3e8e41;*/
   box-shadow: 0 2px #505050;
   transform: translateY(4px);
 }
