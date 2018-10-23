@@ -1,5 +1,6 @@
 // functions container object
 const f = {
+  // to request do f.request(type, url, callback, reportcb, falldata, fallcb)
   request: function request(type, url, callback, reportcb, falldata, fallcb) {
     const request = new XMLHttpRequest();
     request.open(type, url, true);
@@ -27,5 +28,22 @@ const f = {
   }
 }
 
+// to request do f.GET(url, callback, reportcb, falldata, fallcb)
 f.GET  = f.request.bind(this, 'GET');
+// to request do f.POST(url, callback, reportcb, falldata, fallcb)
 f.POST = f.request.bind(this, 'POST');
+
+f.link_css_as_style_tag = (css_path, id) =>
+  f.GET(css_path, css => {
+    var style = document.createElement('style');
+    style.textContent = css;
+    if (id) style.id = id;
+    document.head.appendChild(style);
+  });
+
+f.link_string_as_style_tag = (css, id) => {
+  var style = document.createElement('style');
+  style.textContent = css;
+  if (id) style.id = id;
+  document.head.appendChild(style);
+}
