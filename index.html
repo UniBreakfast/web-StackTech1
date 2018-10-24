@@ -5,9 +5,10 @@
 
   <script src=MotherBoard/JS/f.js>     </script>
   <script src=MotherBoard/JS/mbvars.js></script>
-  <script src=MotherBoard/JS/mb.js>    </script>
 
   <script>
+    // applying options from mbvars.js to css
+    // while loading it from mb.css and mbvars.css
     if (mbvars.title)
       document.getElementById('mb-title').textContent = mbvars.title;
     f.GET('MotherBoard/CSS/mb.css', mb_css => {
@@ -33,12 +34,15 @@
   <footer  id=mb-footer>   </footer>
 
   <script>
+    // applying options from mbvars.js to DOM
     var ids = mbvars.section_ids;
     if (ids.mb_header ) f.byID('mb-header' ).id = ids.mb_header;
     if (ids.mb_aside  ) f.byID('mb-aside'  ).id = ids.mb_aside;
     if (ids.mb_section) f.byID('mb-section').id = ids.mb_section;
     if (ids.mb_footer ) f.byID('mb-footer' ).id = ids.mb_footer;
   </script>
+
+  <script src=MotherBoard/JS/mb.js></script>
 
 
 </body>

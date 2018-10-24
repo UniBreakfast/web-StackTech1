@@ -14,6 +14,7 @@ body {
     "mb-footer mb-footer";
 }
 
+/* ids do change automatically if they are changed in mbvars.js */
 #mb-header  { grid-area: mb-header  }
 #mb-aside   { grid-area: mb-aside   }
 #mb-section { grid-area: mb-section }

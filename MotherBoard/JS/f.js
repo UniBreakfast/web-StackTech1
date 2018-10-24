@@ -27,6 +27,7 @@ const f = {
     request.send();
   },
 
+  // add style tag (with id) made from string to the head
   link_string_as_style_tag: (css, id) => {
     var style = document.createElement('style');
     style.textContent = css;
@@ -34,6 +35,7 @@ const f = {
     document.head.appendChild(style);
   },
 
+  // alias
   byID: document.getElementById.bind(document)
 }
 
@@ -42,6 +44,7 @@ f.GET  = f.request.bind(this, 'GET');
 // to request do f.POST(url, callback, reportcb, falldata, fallcb)
 f.POST = f.request.bind(this, 'POST');
 
+// add style tag (with id) made from fetched css-file to the head
 f.link_css_as_style_tag = (css_file, id) =>
   f.GET(css_file, css => f.link_string_as_style_tag(css, id));
 
