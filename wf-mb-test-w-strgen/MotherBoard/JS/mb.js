@@ -1,6 +1,6 @@
 const mb = () => {
-  f.byID('mb-header').textContent = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus magni facilis maxime, debitis, velit quod necessitatibus deserunt! Recusandae est culpa veritatis? Exercitationem, accusamus, voluptate. Veniam quidem enim dolor voluptate ipsum similique suscipit distinctio.';
-  f.byID('mb-aside').textContent = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus magni facilis maxime, debitis, velit quod necessitatibus deserunt! Recusandae est culpa veritatis? Exercitationem, accusamus, voluptate. Veniam quidem enim dolor voluptate ipsum similique suscipit distinctio.';
-  f.byID('mb-section').textContent = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus magni facilis maxime, debitis, velit quod necessitatibus deserunt! Recusandae est culpa veritatis? Exercitationem, accusamus, voluptate. Veniam quidem enim dolor voluptate ipsum similique suscipit distinctio.';
-  f.byID('mb-footer').textContent = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus magni facilis maxime, debitis, velit quod necessitatibus deserunt! Recusandae est culpa veritatis? Exercitationem, accusamus, voluptate. Veniam quidem enim dolor voluptate ipsum similique suscipit distinctio.';
+  f.byID('mb-header' ).textContent = StrGen.Text(100,  true);
+  f.byID('mb-aside'  ).textContent = StrGen.Text(500,  true);
+  f.byID('mb-section').textContent = StrGen.Text(3000, true);
+  f.byID('mb-footer' ).textContent = StrGen.Text(300,  true);
 }

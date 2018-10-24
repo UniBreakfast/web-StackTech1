@@ -22,16 +22,25 @@ body {
 
 #mb-header {
   background: #ffc967;
+  padding-left: 0.5rem;
+  padding-right: 0.1rem;
 }
 #mb-aside {
   background: #ada04b;
   color: cornsilk;
+  padding-left: 0.5rem;
+  padding-right: 0.1rem;
 }
 #mb-section {
   background: #f1e9b3;
+  padding-left: 0.5rem;
+  padding-right: 0.1rem;
 }
 #mb-footer {
   background: #634820;
   color: yellow;
   font-weight: normal;
+  padding-left: 0.5rem;
+  padding-right: 0.1rem;
 }
+
