@@ -1,11 +1,11 @@
 let your_value = undefined;
 var mbvars = {
-  title: 'ST1 WorkFlow - MotherBoard',
+  title: 'ST1 - WF MotherBoard',
   section_ids: {
-    mb_header:  'a-perfect-header',
-    mb_aside:   'a-perfect-aside',
-    mb_section: 'a-perfect-section',
-    mb_footer:  'a-perfect-footer'
+    mb_header:  your_value,
+    mb_aside:   your_value,
+    mb_section: your_value,
+    mb_footer:  your_value
   }
 }
 

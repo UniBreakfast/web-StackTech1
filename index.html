@@ -15,13 +15,10 @@
         var css = mb_css + mbvars_css;
         var ids = mbvars.section_ids;
         const replace = (id1, id2) => css = css.split('#mb-'+id1).join('#'+id2);
-        if (ids.mb_header ) replace('header', ids.mb_header);
-        if (ids.mb_aside  )
-          css = css.split('#mb-aside'  ).join('#'+ids.mb_aside  );
-        if (ids.mb_section)
-          css = css.split('#mb-section').join('#'+ids.mb_section);
-        if (ids.mb_footer )
-          css = css.split('#mb-footer' ).join('#'+ids.mb_footer );
+        if (ids.mb_header ) replace('header' , ids.mb_header );
+        if (ids.mb_aside  ) replace('aside'  , ids.mb_aside  );
+        if (ids.mb_section) replace('section', ids.mb_section);
+        if (ids.mb_footer ) replace('footer' , ids.mb_footer );
         f.link_string_as_style_tag(css, 'mb-style');
       })
     });
@@ -37,14 +34,10 @@
 
   <script>
     var ids = mbvars.section_ids;
-    if (ids.mb_header )
-      document.getElementById('mb-header' ).id = ids.mb_header;
-    if (ids.mb_aside  )
-      document.getElementById('mb-aside'  ).id = ids.mb_aside;
-    if (ids.mb_section)
-      document.getElementById('mb-section').id = ids.mb_section;
-    if (ids.mb_footer )
-      document.getElementById('mb-footer' ).id = ids.mb_footer;
+    if (ids.mb_header ) f.byID('mb-header' ).id = ids.mb_header;
+    if (ids.mb_aside  ) f.byID('mb-aside'  ).id = ids.mb_aside;
+    if (ids.mb_section) f.byID('mb-section').id = ids.mb_section;
+    if (ids.mb_footer ) f.byID('mb-footer' ).id = ids.mb_footer;
   </script>
 
 

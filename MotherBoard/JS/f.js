@@ -25,7 +25,16 @@ const f = {
     request.ontimeout =
       () => reportcb(type + ' request to '+ url + ' timed out!');
     request.send();
-  }
+  },
+
+  link_string_as_style_tag: (css, id) => {
+    var style = document.createElement('style');
+    style.textContent = css;
+    if (id) style.id = id;
+    document.head.appendChild(style);
+  },
+
+  byID: document.getElementById.bind(document)
 }
 
 // to request do f.GET(url, callback, reportcb, falldata, fallcb)
@@ -33,17 +42,6 @@ f.GET  = f.request.bind(this, 'GET');
 // to request do f.POST(url, callback, reportcb, falldata, fallcb)
 f.POST = f.request.bind(this, 'POST');
 
-f.link_css_as_style_tag = (css_path, id) =>
-  f.GET(css_path, css => {
-    var style = document.createElement('style');
-    style.textContent = css;
-    if (id) style.id = id;
-    document.head.appendChild(style);
-  });
+f.link_css_as_style_tag = (css_file, id) =>
+  f.GET(css_file, css => f.link_string_as_style_tag(css, id));
 
-f.link_string_as_style_tag = (css, id) => {
-  var style = document.createElement('style');
-  style.textContent = css;
-  if (id) style.id = id;
-  document.head.appendChild(style);
-}
