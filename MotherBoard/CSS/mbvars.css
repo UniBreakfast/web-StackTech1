@@ -8,10 +8,11 @@ body {
     minmax(3rem /* min-height for footer */, max-content);
 
   /* proportions for main and sidebar */
-  grid-template-columns: 1fr 4fr;
+  grid-template-columns: 1fr 3fr;
 
   /* next one is for the sidebar on the right */
   /*
+  grid-template-columns: 3fr 1fr;
   grid-template-areas:
     "mb-header mb-header"
     "mb-section mb-aside"
@@ -24,10 +25,13 @@ body {
 }
 #mb-aside {
   background: #ada04b;
+  color: cornsilk;
 }
 #mb-section {
   background: #f1e9b3;
 }
 #mb-footer {
   background: #634820;
+  color: yellow;
+  font-weight: normal;
 }
