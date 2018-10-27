@@ -6,11 +6,28 @@ http://p.acoras.in.ua/
 //require_once $_SERVER['DOCUMENT_ROOT'].'sandbox.php';
 
 
-include 'class.krumo.php';
+include 'krumo.php';
 krumo(array(1,2,3));
-//echo 1;
-//echo 2;
-//echo 3;
+
+$login    = trim($_REQUEST['login']);
+$password = trim($_REQUEST['password']);
+
+krumo($login, $password);
+
+krumo(array($_REQUEST['login'], $_REQUEST['password']));
+
+if (isset($_REQUEST['login'])      and isset($_REQUEST['password'])) {
+  $login    = trim($_REQUEST['login']);
+  $password = trim($_REQUEST['password']);
+  krumo(array($login, $password));
+}
+
+if (isset($_REQUEST['login'])      and isset($_REQUEST['password']) and
+     trim($_REQUEST['login'])!=='' and  trim($_REQUEST['password'])!=='') {
+  $login    = trim($_REQUEST['login']);
+  $password = trim($_REQUEST['password']);
+  krumo(array($login, $password));
+}
 
 //throw new Exception('Division by zero.');
 //phpinfo();
