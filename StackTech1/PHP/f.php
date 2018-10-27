@@ -19,15 +19,46 @@ class f
   }
 
   private static function _query($query, $db) {
-    $results = array();
+    $stmt = mysqli_stmt_init($db);
+    if (mysqli_stmt_prepare($stmt, $query)) {
+      $results[] = f::_acronym($query);
+      mysqli_stmt_bind_param($stmt, 'i', $params[0]);
+      mysqli_stmt_execute($stmt) or exit("$results[0] Query failed!");
+      mysqli_stmt_bind_result($stmt, $results[]);
+      mysqli_stmt_fetch($stmt);
+      $results[] = mysqli_stmt_num_rows($stmt);
+      $results[] = mysqli_stmt_field_count($stmt);
+      mysqli_stmt_close($stmt);
+      return $results;
+    }
+  }
+/*
+
+  private static function _query($query, $db) {
     $results[] = f::_acronym($query);
     $results[] = mysqli_query($db, $query) or exit("$results[0] Query failed!");
     $results[] = mysqli_num_rows  ($results[1]);
     $results[] = mysqli_num_fields($results[1]);
     return $results;
   }
+*/
 
   # retrieves a single field value from a database
+  static function getValue($db, $query, $params=array()) {
+
+
+
+    //list($q_short, $result, $rows, $fields) = f::_query($query, $db);
+    //if     ($rows>1 and $fields>1)
+    //  exit("$q_short Query retrieved $rows rows
+    //                            with $fields fiedls instead of one value!");
+    //elseif ($rows>1)
+    //  exit("$q_short Query retrieved $rows rows instead of one value!");
+    //elseif ($fields>1)
+    //  exit("$q_short Query retrieved $fields fiedls instead of one value!");
+    //elseif (list($value) = mysqli_fetch_row($result)) return $value;
+  }
+/*
   static function getValue($query, $db) {
     list($q_short, $result, $rows, $fields) = f::_query($query, $db);
     if     ($rows>1 and $fields>1)
@@ -39,6 +70,7 @@ class f
       exit("$q_short Query retrieved $fields fiedls instead of one value!");
     elseif (list($value) = mysqli_fetch_row($result)) return $value;
   }
+*/
 
   # retrieves multiple rows from a database with one value each
   static function getValues($query, $db) {
@@ -73,22 +105,23 @@ class f
 //krumo(f::getValue("SELECT id, record FROM test_list", $db));
 //krumo(f::getValue("SELECT id, record FROM test_list LIMIT 1", $db));
 //krumo(f::getValue("SELECT id FROM test_list", $db));
-krumo(f::getValue("SELECT id FROM test_list LIMIT 1", $db));
+//krumo(f::getValue("SELECT id FROM test_list LIMIT 1", $db));
+krumo(f::getValue($db, "SELECT record FROM test_list WHERE id = ?", array(63)));
 //krumo(f::getValue("SELECT id FROM test_list WHERE record = 'Termin'", $db));
 //krumo(f::getValues("SELECT id, record FROM test_list", $db));
 //krumo(f::getValues("SELECT id, record FROM test_list LIMIT 1", $db));
 //krumo(f::getValues("SELECT id FROM test_list", $db));
-krumo(f::getValues("SELECT id FROM test_list LIMIT 1", $db));
+//krumo(f::getValues("SELECT id FROM test_list LIMIT 1", $db));
 //krumo(f::getValues("SELECT id FROM test_list WHERE record = 'Termin'", $db));
 //krumo(f::getRecord("SELECT id, record FROM test_list", $db));
-krumo(f::getRecord("SELECT id, record FROM test_list LIMIT 1", $db));
+//krumo(f::getRecord("SELECT id, record FROM test_list LIMIT 1", $db));
 //krumo(f::getRecord("SELECT id FROM test_list", $db));
-krumo(f::getRecord("SELECT id FROM test_list LIMIT 1", $db));
-krumo(f::getRecord("SELECT id FROM test_list WHERE record = 'Termin'", $db));
-krumo(f::getRecords("SELECT id, record FROM test_list", $db));
-krumo(f::getRecords("SELECT id, record FROM test_list LIMIT 1", $db));
-krumo(f::getRecords("SELECT id FROM test_list", $db));
-krumo(f::getRecords("SELECT id FROM test_list LIMIT 1", $db));
-krumo(f::getRecords("SELECT id FROM test_list WHERE record = 'Termin'", $db));
+//krumo(f::getRecord("SELECT id FROM test_list LIMIT 1", $db));
+//krumo(f::getRecord("SELECT id FROM test_list WHERE record = 'Termin'", $db));
+//krumo(f::getRecords("SELECT id, record FROM test_list", $db));
+//krumo(f::getRecords("SELECT id, record FROM test_list LIMIT 1", $db));
+//krumo(f::getRecords("SELECT id FROM test_list", $db));
+//krumo(f::getRecords("SELECT id FROM test_list LIMIT 1", $db));
+//krumo(f::getRecords("SELECT id FROM test_list WHERE record = 'Termin'", $db));
 krumo::functions();
 ?>
