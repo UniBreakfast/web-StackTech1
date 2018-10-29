@@ -18,17 +18,20 @@ class f
     return trim($acronym).'"';
   }
 
-  private static function _query($query, $db) {
+  private static function _query($query, $db, $params=array()) {
     $stmt = mysqli_stmt_init($db);
+    $query = "SELECT id, record FROM test_list WHERE id = ?";
     if (mysqli_stmt_prepare($stmt, $query)) {
       $results[] = f::_acronym($query);
-      mysqli_stmt_bind_param($stmt, 'i', $params[0]);
+      foreach($params as $param)
+        mysqli_stmt_bind_param($stmt, $param[1], $param[0]);
       mysqli_stmt_execute($stmt) or exit("$results[0] Query failed!");
-      mysqli_stmt_bind_result($stmt, $results[]);
-      mysqli_stmt_fetch($stmt);
       $results[] = mysqli_stmt_num_rows($stmt);
       $results[] = mysqli_stmt_field_count($stmt);
+      mysqli_stmt_bind_result($stmt, $results[], $results[]);
+      mysqli_stmt_fetch($stmt);
       mysqli_stmt_close($stmt);
+      krumo($results);
       return $results;
     }
   }
@@ -45,18 +48,15 @@ class f
 
   # retrieves a single field value from a database
   static function getValue($db, $query, $params=array()) {
-
-
-
-    //list($q_short, $result, $rows, $fields) = f::_query($query, $db);
-    //if     ($rows>1 and $fields>1)
-    //  exit("$q_short Query retrieved $rows rows
-    //                            with $fields fiedls instead of one value!");
-    //elseif ($rows>1)
-    //  exit("$q_short Query retrieved $rows rows instead of one value!");
-    //elseif ($fields>1)
-    //  exit("$q_short Query retrieved $fields fiedls instead of one value!");
-    //elseif (list($value) = mysqli_fetch_row($result)) return $value;
+    list($q_short, $result, $rows, $fields) = f::_query($query, $db, $params);
+    if     ($rows>1 and $fields>1)
+      exit("$q_short Query retrieved $rows rows
+                                with $fields fiedls instead of one value!");
+    elseif ($rows>1)
+      exit("$q_short Query retrieved $rows rows instead of one value!");
+    elseif ($fields>1)
+      exit("$q_short Query retrieved $fields fiedls instead of one value!");
+    else return $value;
   }
 /*
   static function getValue($query, $db) {
@@ -106,7 +106,7 @@ class f
 //krumo(f::getValue("SELECT id, record FROM test_list LIMIT 1", $db));
 //krumo(f::getValue("SELECT id FROM test_list", $db));
 //krumo(f::getValue("SELECT id FROM test_list LIMIT 1", $db));
-krumo(f::getValue($db, "SELECT record FROM test_list WHERE id = ?", array(63)));
+//krumo(f::getValue($db, "SELECT record FROM test_list WHERE id > ?", array(array(64, 'i'))));
 //krumo(f::getValue("SELECT id FROM test_list WHERE record = 'Termin'", $db));
 //krumo(f::getValues("SELECT id, record FROM test_list", $db));
 //krumo(f::getValues("SELECT id, record FROM test_list LIMIT 1", $db));
