@@ -18,25 +18,66 @@ class f
     return trim($acronym).'"';
   }
 
-  private static function _query($query, $db, $params=array()) {
+  private static function _query($query, $db, $params) {
     $stmt = mysqli_stmt_init($db);
-    $query = "SELECT id, record FROM test_list WHERE id = ?";
+    if (mysqli_stmt_prepare($stmt, $query)) {
+      $params_types = '';
+      foreach($params as $param) {
+        $params_types .= $param[1];
+        $prep_params[] = $param[0];
+      }
+      $params = $prep_params;
+      krumo($params);
+      array_unshift($params, $stmt, $params_types);
+      krumo($params);
+
+      //call_user_func_array('mysqli_stmt_bind_param', $params);
+
+      mysqli_stmt_bind_param($stmt, 'i', $id);
+
+
+      $id = 63;
+      mysqli_stmt_execute($stmt);
+      mysqli_stmt_bind_result($stmt, $a, $b);
+      while (mysqli_stmt_fetch($stmt)) {
+        $results[] = $a;
+        $results[] = $b;
+      }
+      krumo($results);
+      mysqli_stmt_close($stmt);
+    }
+  }
+
+
+  private static function old_query($query, $db, $params) {
+    $stmt = mysqli_stmt_init($db);
+    $query = "SELECT id, record FROM test_list";
+    //$query = "SELECT id, record FROM test_list WHERE id = ?";
     if (mysqli_stmt_prepare($stmt, $query)) {
       $results[] = f::_acronym($query);
-      foreach($params as $param)
-        mysqli_stmt_bind_param($stmt, $param[1], $param[0]);
+      //foreach($params as $param)
+      //  mysqli_stmt_bind_param($stmt, $param[1], $param[0]);
       mysqli_stmt_execute($stmt) or exit("$results[0] Query failed!");
-      $results[] = mysqli_stmt_num_rows($stmt);
+      //$results[] = mysqli_stmt_num_rows($stmt);
       $results[] = mysqli_stmt_field_count($stmt);
+      $result = array_fill(0, $results[1], null);
+      array_unshift($result, $stmt);
+      krumo($result);
       mysqli_stmt_bind_result($stmt, $results[], $results[]);
-      mysqli_stmt_fetch($stmt);
+      krumo(call_user_func_array('mysqli_stmt_bind_result', $result));
+      while (mysqli_stmt_fetch($stmt)) {
+        $results[] = $result[1];
+        $results[] = $result[2];
+      }
+      //mysqli_stmt_fetch($stmt);
+      mysqli_stmt_store_result($stmt);
       mysqli_stmt_close($stmt);
+      //krumo($stmt);
       krumo($results);
       return $results;
     }
   }
 /*
-
   private static function _query($query, $db) {
     $results[] = f::_acronym($query);
     $results[] = mysqli_query($db, $query) or exit("$results[0] Query failed!");
@@ -48,15 +89,19 @@ class f
 
   # retrieves a single field value from a database
   static function getValue($db, $query, $params=array()) {
-    list($q_short, $result, $rows, $fields) = f::_query($query, $db, $params);
-    if     ($rows>1 and $fields>1)
+    $result  = f::_query($query, $db, $params);
+    //$q_short = array_shift($result);
+    //$rows    = array_shift($result);
+    //$fields  = array_shift($result);
+    //krumo($q_short, $rows, $fields, $result);
+    /*    if     ($rows>1 and $fields>1)
       exit("$q_short Query retrieved $rows rows
                                 with $fields fiedls instead of one value!");
     elseif ($rows>1)
       exit("$q_short Query retrieved $rows rows instead of one value!");
     elseif ($fields>1)
       exit("$q_short Query retrieved $fields fiedls instead of one value!");
-    else return $value;
+    else return $value;*/
   }
 /*
   static function getValue($query, $db) {
@@ -106,7 +151,7 @@ class f
 //krumo(f::getValue("SELECT id, record FROM test_list LIMIT 1", $db));
 //krumo(f::getValue("SELECT id FROM test_list", $db));
 //krumo(f::getValue("SELECT id FROM test_list LIMIT 1", $db));
-//krumo(f::getValue($db, "SELECT record FROM test_list WHERE id > ?", array(array(64, 'i'))));
+krumo(f::getValue($db, "SELECT id, record FROM test_list WHERE id > ?", array(array(63, 'i'), array(64, 'i'))));
 //krumo(f::getValue("SELECT id FROM test_list WHERE record = 'Termin'", $db));
 //krumo(f::getValues("SELECT id, record FROM test_list", $db));
 //krumo(f::getValues("SELECT id, record FROM test_list LIMIT 1", $db));
@@ -123,5 +168,5 @@ class f
 //krumo(f::getRecords("SELECT id FROM test_list", $db));
 //krumo(f::getRecords("SELECT id FROM test_list LIMIT 1", $db));
 //krumo(f::getRecords("SELECT id FROM test_list WHERE record = 'Termin'", $db));
-krumo::functions();
+//krumo::functions();
 ?>

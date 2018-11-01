@@ -7,8 +7,41 @@ http://p.acoras.in.ua/
 
 
 include 'krumo.php';
-krumo(array(1,2,3));
 
+
+
+
+
+##################################################
+
+if ($stmt = $mysqli->prepare("SELECT * FROM sample WHERE t2 LIKE ?")) {
+  $tt2 = '%';
+
+  $stmt->bind_param("s", $tt2);
+  $stmt->execute();
+
+  $meta = $stmt->result_metadata();
+  while ($field = $meta->fetch_field())
+  {
+    $params[] = &$row[$field->name];
+  }
+
+  //call_user_func_array('mysqli_stmt_bind_result', $params);
+  call_user_func_array(array($stmt, 'bind_result'), $params);
+
+  while ($stmt->fetch()) {
+    foreach($row as $key => $val)
+    {
+      $c[$key] = $val;
+    }
+    $result[] = $c;
+  }
+
+  $stmt->close();
+}
+
+
+/*
 $login    = trim($_REQUEST['login']);
 $password = trim($_REQUEST['password']);
 
@@ -28,6 +61,7 @@ if (isset($_REQUEST['login'])      and isset($_REQUEST['password']) and
   $password = trim($_REQUEST['password']);
   krumo(array($login, $password));
 }
+*/
 
 //throw new Exception('Division by zero.');
 //phpinfo();
