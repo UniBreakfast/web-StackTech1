@@ -20,145 +20,77 @@ class f
 
   private static function _query($query, $db, $params) {
     $stmt = mysqli_stmt_init($db);
+    $q = f::_acronym($query);
     if (mysqli_stmt_prepare($stmt, $query)) {
       foreach($params as &$param) {
         $param_types .= $param[1];
-        $c_u_f_a_params[] = &$param[0];
+        $p_binds[]   = &$param[0];
       }
-      array_unshift($c_u_f_a_params, $stmt, $param_types);
-      call_user_func_array('mysqli_stmt_bind_param', $c_u_f_a_params);
-      mysqli_stmt_execute($stmt);
-      mysqli_stmt_bind_result($stmt, $a, $b);
-      while (mysqli_stmt_fetch($stmt)) {
-        $results[] = $a;
-        $results[] = $b;
-      }
-      krumo($results);
-      mysqli_stmt_close($stmt);
-    }
-  }
+      array_unshift($p_binds, $stmt, $param_types);
+      call_user_func_array('mysqli_stmt_bind_param', $p_binds);
+      mysqli_stmt_execute($stmt) or exit("$q Query failed!");
 
-
-  private static function old_query($query, $db, $params) {
-    $stmt = mysqli_stmt_init($db);
-    $query = "SELECT id, record FROM test_list";
-    //$query = "SELECT id, record FROM test_list WHERE id = ?";
-    if (mysqli_stmt_prepare($stmt, $query)) {
-      $results[] = f::_acronym($query);
-      //foreach($params as $param)
-      //  mysqli_stmt_bind_param($stmt, $param[1], $param[0]);
-      mysqli_stmt_execute($stmt) or exit("$results[0] Query failed!");
-      //$results[] = mysqli_stmt_num_rows($stmt);
-      $results[] = mysqli_stmt_field_count($stmt);
-      $result = array_fill(0, $results[1], null);
-      array_unshift($result, $stmt);
-      krumo($result);
-      mysqli_stmt_bind_result($stmt, $results[], $results[]);
-      krumo(call_user_func_array('mysqli_stmt_bind_result', $result));
-      while (mysqli_stmt_fetch($stmt)) {
-        $results[] = $result[1];
-        $results[] = $result[2];
-      }
-      //mysqli_stmt_fetch($stmt);
-      mysqli_stmt_store_result($stmt);
+      for ($i = 0; $i < mysqli_stmt_field_count($stmt); $i++)
+        $r_binds[] = &$row[$i];
+      array_unshift($r_binds, $stmt);
+      call_user_func_array('mysqli_stmt_bind_result', $r_binds);
+      while (mysqli_stmt_fetch($stmt))
+        $result[] = array_map(function($field) { return $field; }, $row);
       mysqli_stmt_close($stmt);
-      //krumo($stmt);
-      krumo($results);
-      return $results;
-    }
+      return array($q, $result);
+    } else exit("$q Query failed!");
   }
-/*
-  private static function _query($query, $db) {
-    $results[] = f::_acronym($query);
-    $results[] = mysqli_query($db, $query) or exit("$results[0] Query failed!");
-    $results[] = mysqli_num_rows  ($results[1]);
-    $results[] = mysqli_num_fields($results[1]);
-    return $results;
-  }
-*/
 
   # retrieves a single field value from a database
-  static function getValue($db, $query, $params=array()) {
-    $result  = f::_query($query, $db, $params);
-    //$q_short = array_shift($result);
-    //$rows    = array_shift($result);
-    //$fields  = array_shift($result);
-    //krumo($q_short, $rows, $fields, $result);
-    /*    if     ($rows>1 and $fields>1)
-      exit("$q_short Query retrieved $rows rows
-                                with $fields fiedls instead of one value!");
-    elseif ($rows>1)
-      exit("$q_short Query retrieved $rows rows instead of one value!");
-    elseif ($fields>1)
-      exit("$q_short Query retrieved $fields fiedls instead of one value!");
-    else return $value;*/
+  static function getValue($db, $query, $params) {
+    list($q, $result) = f::_query($query, $db, $params);
+    if ($fields = count($result[0])) {
+        $rows   = count($result);
+      if ($rows>1 and $fields>1)
+        exit("$q Query retrieved $rows rows with $fields fields "
+             ."instead of one value!");
+      if ($rows>1)
+        exit("$q Query retrieved $rows rows instead of one value!");
+      if ($fields>1)
+        exit("$q Query retrieved $fields fields instead of one value!");
+      return $result[0][0];
+    }
   }
-/*
-  static function getValue($query, $db) {
-    list($q_short, $result, $rows, $fields) = f::_query($query, $db);
-    if     ($rows>1 and $fields>1)
-      exit("$q_short Query retrieved $rows rows
-                                with $fields fiedls instead of one value!");
-    elseif ($rows>1)
-      exit("$q_short Query retrieved $rows rows instead of one value!");
-    elseif ($fields>1)
-      exit("$q_short Query retrieved $fields fiedls instead of one value!");
-    elseif (list($value) = mysqli_fetch_row($result)) return $value;
-  }
-*/
 
   # retrieves multiple rows from a database with one value each
-  static function getValues($query, $db) {
-    list($q_short, $result, $rows, $fields) = f::_query($query, $db);
-    if ($fields>1) exit("$q_short Query retrieved $rows row(s)
-                    with $fields fiedls each instead of one value per row!");
-    elseif ($rows>0) {
-      $values = array();
-      while (list($value) = mysqli_fetch_row($result)) $values[] = $value;
-      return $values;
+  static function getValues($db, $query, $params) {
+    list($q, $result) = f::_query($query, $db, $params);
+    if ($fields = count($result[0])) {
+        $rows   = count($result);
+      if ($fields>1) exit("$q Query retrieved $rows row(s) "
+              ."with $fields fields each instead of one field value per row!");
+      return array_map(function($row) { return $row[0]; }, $result);
     }
   }
 
   # retrieves a row of fields values from a database
-  static function getRecord($query, $db) {
-    list($q_short, $result, $rows, $fields) = f::_query($query, $db);
-    if ($rows>1) exit("$q_short Query retrieved $rows rows instead of one!");
-    elseif ($values = mysqli_fetch_row($result)) return $values;
+  static function getRecord($db, $query, $params) {
+    list($q, $result) = f::_query($query, $db, $params);
+    if ($fields = count($result[0])) {
+        $rows   = count($result);
+      if ($rows>1) exit("$q Query retrieved $rows rows instead of one!");
+      return $result[0];
+    }
   }
 
   # retrieves multiple records with fieds from a database
-  static function getRecords($query, $db) {
-    list($q_short, $result, $rows, $fields) = f::_query($query, $db);
-    if ($rows>0) {
-      $records = array();
-      while ($values = mysqli_fetch_row($result)) $records[] = $values;
-      return $records;
-    }
+  static function getRecords($db, $query, $params) {
+    list($q, $result) = f::_query($query, $db, $params);
+    return $result;
   }
 }
 
-//krumo(f::getValue("SELECT id, record FROM test_list", $db));
-//krumo(f::getValue("SELECT id, record FROM test_list LIMIT 1", $db));
-//krumo(f::getValue("SELECT id FROM test_list", $db));
-//krumo(f::getValue("SELECT id FROM test_list LIMIT 1", $db));
-//krumo(f::getValue($db, "SELECT id, record FROM test_list WHERE id > ? AND id < ?", array(array(62, 'i'), array(64, 'i'))));
-krumo(f::getValue($db, "SELECT id, record FROM test_list WHERE id > ? AND id < ? AND record = ?", array(array('60', 'i'), array('66', 'i'), array('Terminator', 's') )));
-//krumo(f::getValue($db, "SELECT id, record FROM test_list WHERE id > ?", array(array(63, 'i'))));
-//krumo(f::getValue("SELECT id FROM test_list WHERE record = 'Termin'", $db));
-//krumo(f::getValues("SELECT id, record FROM test_list", $db));
-//krumo(f::getValues("SELECT id, record FROM test_list LIMIT 1", $db));
-//krumo(f::getValues("SELECT id FROM test_list", $db));
-//krumo(f::getValues("SELECT id FROM test_list LIMIT 1", $db));
-//krumo(f::getValues("SELECT id FROM test_list WHERE record = 'Termin'", $db));
-//krumo(f::getRecord("SELECT id, record FROM test_list", $db));
-//krumo(f::getRecord("SELECT id, record FROM test_list LIMIT 1", $db));
-//krumo(f::getRecord("SELECT id FROM test_list", $db));
-//krumo(f::getRecord("SELECT id FROM test_list LIMIT 1", $db));
-//krumo(f::getRecord("SELECT id FROM test_list WHERE record = 'Termin'", $db));
-//krumo(f::getRecords("SELECT id, record FROM test_list", $db));
-//krumo(f::getRecords("SELECT id, record FROM test_list LIMIT 1", $db));
-//krumo(f::getRecords("SELECT id FROM test_list", $db));
-//krumo(f::getRecords("SELECT id FROM test_list LIMIT 1", $db));
-//krumo(f::getRecords("SELECT id FROM test_list WHERE record = 'Termin'", $db));
-//krumo::functions();
+//krumo(f::getValue($db, "SELECT id FROM test_list WHERE id > ?", array(array(63, 'i'))));
+//krumo(f::getValue($db, "SELECT id FROM test_list WHERE id > ?", array(array(63, 'i'))));
+//krumo(f::getValues($db, "SELECT record FROM test_list"));
+//krumo(f::getRecord($db, "SELECT id, record FROM test_list WHERE id > ?", array(array(63, 'i'))));
+//krumo(f::getRecords($db, "SELECT id, record FROM test_list WHERE id > ? AND id < ?", array(array(62, 'i'), array(66, 'i'))));
+//krumo(f::getRecords($db, "SELECT id, record, dt_create, dt_modify FROM test_list WHERE id > ? AND id < ?", array(array(62, 'i'), array(66, 'i'))));
+//krumo(f::getRecord($db, "SELECT id, record, dt_create, dt_modify FROM test_list WHERE id > ? AND id < ?", array(array(65, 'i'), array(66, 'i'))));
+//krumo(f::getRecord($db, "SELECT id, record FROM test_list WHERE id > ? AND id < ? AND record = ?", array(array('60', 'i'), array('66', 'i'), array('Terminator', 's') )));
 ?>
