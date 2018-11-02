@@ -9,11 +9,9 @@ http://p.acoras.in.ua/
 include 'krumo.php';
 
 
-
-
-
 ##################################################
 
+/*
 if ($stmt = $mysqli->prepare("SELECT * FROM sample WHERE t2 LIKE ?")) {
   $tt2 = '%';
 
@@ -39,6 +37,7 @@ if ($stmt = $mysqli->prepare("SELECT * FROM sample WHERE t2 LIKE ?")) {
 
   $stmt->close();
 }
+*/
 
 
 /*

@@ -21,22 +21,12 @@ class f
   private static function _query($query, $db, $params) {
     $stmt = mysqli_stmt_init($db);
     if (mysqli_stmt_prepare($stmt, $query)) {
-      $params_types = '';
-      foreach($params as $param) {
-        $params_types .= $param[1];
-        $prep_params[] = $param[0];
+      foreach($params as &$param) {
+        $param_types .= $param[1];
+        $c_u_f_a_params[] = &$param[0];
       }
-      $params = $prep_params;
-      krumo($params);
-      array_unshift($params, $stmt, $params_types);
-      krumo($params);
-
-      //call_user_func_array('mysqli_stmt_bind_param', $params);
-
-      mysqli_stmt_bind_param($stmt, 'i', $id);
-
-
-      $id = 63;
+      array_unshift($c_u_f_a_params, $stmt, $param_types);
+      call_user_func_array('mysqli_stmt_bind_param', $c_u_f_a_params);
       mysqli_stmt_execute($stmt);
       mysqli_stmt_bind_result($stmt, $a, $b);
       while (mysqli_stmt_fetch($stmt)) {
@@ -151,7 +141,9 @@ class f
 //krumo(f::getValue("SELECT id, record FROM test_list LIMIT 1", $db));
 //krumo(f::getValue("SELECT id FROM test_list", $db));
 //krumo(f::getValue("SELECT id FROM test_list LIMIT 1", $db));
-krumo(f::getValue($db, "SELECT id, record FROM test_list WHERE id > ?", array(array(63, 'i'), array(64, 'i'))));
+//krumo(f::getValue($db, "SELECT id, record FROM test_list WHERE id > ? AND id < ?", array(array(62, 'i'), array(64, 'i'))));
+krumo(f::getValue($db, "SELECT id, record FROM test_list WHERE id > ? AND id < ? AND record = ?", array(array('60', 'i'), array('66', 'i'), array('Terminator', 's') )));
+//krumo(f::getValue($db, "SELECT id, record FROM test_list WHERE id > ?", array(array(63, 'i'))));
 //krumo(f::getValue("SELECT id FROM test_list WHERE record = 'Termin'", $db));
 //krumo(f::getValues("SELECT id, record FROM test_list", $db));
 //krumo(f::getValues("SELECT id, record FROM test_list LIMIT 1", $db));
