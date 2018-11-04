@@ -2,7 +2,7 @@
 require_once $_SERVER['DOCUMENT_ROOT'].'sandbox.php';
 require_once 'authvars.php';
 require_once 'seq.php';
-require_once '../../Common/PHP/f.php';
+
 if (isset($_REQUEST['cookie']) and trim($_REQUEST['cookie'])!=='') {
   $cookie = trim($_REQUEST['cookie']);
   list($userid, $token) = explode('|', $cookie);
@@ -12,10 +12,11 @@ if (isset($_REQUEST['cookie']) and trim($_REQUEST['cookie'])!=='') {
   $bfp      = "$addrpart $agent";
 
   $query = "SELECT id, bfp_hash, dt_modify FROM $sessionTable
-            WHERE user_id = ? AND token = ?";
-  $params = array(array($userid, 'i'), array($token, 's'));
+            WHERE user_id = $userid AND token = '$token'";
+  $result = mysqli_query($db, $query)
+    or exit ("SELECT token FROM $sessionTable Query failed!");
 
-  if (list($id, $hash, $dtModify) = f::getRecord($db, $query, $params))
+  if (list($id, $hash, $dtModify) = mysqli_fetch_row($result))
     if (hashCheck($bfp, $hash) and
         strtotime($dtModify)+216000 /*2.5days*/ - time() > 0) {
       require_once $_SERVER['DOCUMENT_ROOT'].'StackTech1/Auth/PHP/seq.php';
