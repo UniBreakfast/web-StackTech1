@@ -1,6 +1,7 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'].'sandbox.php';
 require_once 'authvars.php';
+require_once '../../Common/PHP/f.php';
 
 if (isset($_REQUEST['cookie']) && trim($_REQUEST['cookie'])!=='')
   $cookie = trim($_REQUEST['cookie']);

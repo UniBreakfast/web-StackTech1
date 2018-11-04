@@ -2,6 +2,8 @@
 require_once $_SERVER['DOCUMENT_ROOT'].'sandbox.php';
 require_once 'authvars.php';
 require_once 'seq.php';
+require_once '../../Common/PHP/f.php';
+
 if (isset($_REQUEST['login'])      and isset($_REQUEST['password']) and
      trim($_REQUEST['login'])!=='' and  trim($_REQUEST['password'])!=='') {
   $login    = trim($_REQUEST['login']);
