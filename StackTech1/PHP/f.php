@@ -1,13 +1,11 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'].'sandbox.php';
-include 'krumo.php';
-
-error_reporting(E_PARSE | E_ERROR);
+//require_once $_SERVER['DOCUMENT_ROOT'].'sandbox.php';
+//include 'krumo.php';
 
 # just a convenient object with utilitary functions
 class f
 {
-
+  # shortens the query for obscurity
   private static function _acronym($string) {
     $words = explode(' ', $string);
     $acronym = '"';
@@ -18,6 +16,7 @@ class f
     return trim($acronym).'"';
   }
 
+  # generic query wrapper to use differently in specific cases
   private static function _query($query, $db, $params) {
     $stmt = mysqli_stmt_init($db);
     $q = f::_acronym($query);
@@ -39,6 +38,17 @@ class f
       mysqli_stmt_close($stmt);
       return array($q, $result);
     } else exit("$q Query failed!");
+  }
+
+  # adds a record and returns id of inserted record afterwards
+  static function putRecord($db, $query, $params) {
+    f::_query($query, $db, $params);
+    return mysqli_insert_id($db);
+  }
+
+  # simpy executes the query without returning anything
+  static function setValues($db, $query, $params) {
+    f::_query($query, $db, $params);
   }
 
   # retrieves a single field value from a database

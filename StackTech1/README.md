@@ -1,2 +1,7 @@
 # web-StackTech1
-My sandbox playground for research and master the web stack technologies and techniques I currently use.
+f.php is a component-wrapper for mysqli with prepared statements.
+It provides an f object with methods:
+getValue($db, $query, $params)
+getValues($db, $query, $params)
+getRecord($db, $query, $params)
+getRecords($db, $query, $params)
