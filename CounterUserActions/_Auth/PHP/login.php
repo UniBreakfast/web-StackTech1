@@ -39,18 +39,18 @@ if (isset($_REQUEST['login'])      and isset($_REQUEST['password']) and
       mysqli_query($db, $query)
         or exit ('INSERT user_id, token... Query failed!');
       setcookie('user', "$userid|$token", time()+216000, '/');
-      header("Location: ../../$insidePage");
+      header("Location: ../..");
     }
     else {
       setcookie('login',    $login,    time()+5, '/');
       setcookie('check', 'wrong_pass', time()+5, '/');
-      header('Location: ../../login.htm');
+      header('Location: ../../login');
     }
   }
   else {
     setcookie('login',    $login,     time()+5, '/');
     setcookie('check', 'wrong_login', time()+5, '/');
-    header('Location: ../../login.htm');
+    header('Location: ../../login');
   }
 }
 else echo 'no login or password provided';

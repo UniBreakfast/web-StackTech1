@@ -1,1 +1,0 @@
-var mainpage = 'inside.htm';

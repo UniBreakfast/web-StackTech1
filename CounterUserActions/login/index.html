@@ -1,29 +1,19 @@
 <!DOCTYPE html>
 <head>
   <meta charset=UTF-8>
-  <title>ST1 - Log in</title>
+  <title> CwUA - Log in </title>
 
-  <link href=Auth/CSS/auth.css rel=stylesheet>
+  <link href=../_Auth/CSS/auth.css rel=stylesheet>
 
-  <script src=Auth/JS/authvars.js></script>
+  <script src=../_Auth/JS/authvars.js></script>
 
 </head>
 <body>
-  <h1>Stack Tehnologies and Techniques - Authorization</h1>
-  <p>
-    A simple authorization module. <br>
-    It has login.htm and register.htm pages. <br>
-    And <b>auth.htm (outside) and inside.htm</b> pages - <b>for illustration only.</b> <br>
-    <b>authvars.js and authvars.php have to be changed on use.</b> <br>
-    ifsession.js with ifsession.php are checking all inside pages for user cookie. <br>
-    register.php, login.php, logout.php are serving their roles respectively. <br>
-    functions.js, cookies.js and seq.php contain functions needed for module to work. <br>
-  </p>
 
-  <button onclick=location.href='register.htm'>REGISTER</button>
+  <button onclick=location.href='../register'>REGISTER</button>
   <button onclick=location.href=mainpage>       INSIDE  </button>
 
-  <form action=Auth/PHP/login.php method=post>
+  <form action=../_Auth/PHP/login.php method=post>
     <input size=32 maxlength=32 required name=login    placeholder=login>
     <input size=32 maxlength=32 required name=password placeholder=password
     type=password>
@@ -33,9 +23,9 @@
     <span  style=display:none> incorrect password </span>
   </form>
 
-  <script src=Common/JS/functions.js></script>
-  <script src=Common/JS/cookies.js  ></script>
-  <script src=Auth/JS/ifsession.js  ></script>
+  <script src=../_Common/JS/functions.js></script>
+  <script src=../_Common/JS/cookies.js  ></script>
+  <script src=../_Auth/JS/ifsession.js  ></script>
   <script>
     if (f.APIcookie.get('check')=='wrong_login')
       document.forms[0].children[5].style.display = 'inline';

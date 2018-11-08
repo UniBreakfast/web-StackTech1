@@ -1,9 +1,9 @@
 (() => {
-  var inside = (!location.pathname.endsWith('login.htm') &&
-                !location.pathname.endsWith('register.htm'));
+  var inside = (!location.pathname.endsWith('/login/') &&
+                !location.pathname.endsWith('/register/'));
   var user = f.APIcookie.get('user');
   if (user===undefined) {
-    if (inside) location.replace('login.htm');
+    if (inside) location.replace('../login');
   }
   else {
     var user_id = user.substring(0, user.indexOf('|'))
@@ -11,7 +11,7 @@
       if (response.includes('|')) [response, new_token] = response.split('|');
       if (response == 'invalid') {
         f.APIcookie.remove('user');
-        location.replace('login.htm');
+        location.replace('../login');
       }
       else if (response == 'valid')
         f.APIcookie.set('user', user_id+'|'+new_token, {expires: 2.5});
@@ -28,13 +28,13 @@
                    'Would you like to log out now and proceed to ' +
                    location.pathname;
       if (response == 'invalid' || (response == 'valid' && confirm(prompt))) {
-        f.POST('Auth/PHP/logout.php?cookie='+user);
+        f.POST('../_Auth/PHP/logout.php?cookie='+user);
         f.APIcookie.remove('user');
       }
       else if (response == 'valid') location.replace(mainpage);
     }
     const reportcb = response => alert(response);
-    f.POST('Auth/PHP/ifsession.php?cookie='+user,
+    f.POST('../_Auth/PHP/ifsession.php?cookie='+user,
            inside? incb : outcb, reportcb);
   }
 })();

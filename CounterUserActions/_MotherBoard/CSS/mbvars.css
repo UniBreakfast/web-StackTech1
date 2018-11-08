@@ -1,0 +1,37 @@
+body {
+  font: bold 16px/25px "Trebuchet MS", Sans-Serif;
+  background: cornsilk;
+  grid-gap: 0.6rem;
+  grid-template-rows:
+    minmax(3rem /* min-height for header */, max-content)
+    auto
+    minmax(3rem /* min-height for footer */, max-content);
+
+  /* proportions for main and sidebar */
+  grid-template-columns: 1fr 3fr;
+
+  /* next one is for the sidebar on the right */
+  /*
+  grid-template-columns: 3fr 1fr;
+  grid-template-areas:
+    "mb-header mb-header"
+    "mb-section mb-aside"
+    "mb-footer mb-footer";
+    */
+}
+
+#mb-header {
+  background: #ffc967;
+}
+#mb-aside {
+  background: #ada04b;
+  color: cornsilk;
+}
+#mb-section {
+  background: #f1e9b3;
+}
+#mb-footer {
+  background: #634820;
+  color: yellow;
+  font-weight: normal;
+}

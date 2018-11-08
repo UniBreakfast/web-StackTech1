@@ -3,17 +3,17 @@
   <meta charset=UTF-8>
   <title id=mb-title> CwUA - Main menu </title>
 
-  <script src=_MotherBoard/JS/f.js>     </script>
-  <script src=_MotherBoard/JS/mbvars.js></script>
-  <script src=_MotherBoard/JS/mb.js>    </script>
+  <script src=../_MotherBoard/JS/f.js>     </script>
+  <script src=../_MotherBoard/JS/mbvars.js></script>
+  <script src=../_MotherBoard/JS/mb.js>    </script>
 
   <script>
     // applying options from mbvars.js to css
     // while loading it from mb.css and mbvars.css
     if (mbvars.title)
       document.getElementById('mb-title').textContent = mbvars.title;
-    f.GET('_MotherBoard/CSS/mb.css', mb_css => {
-      f.GET('_MotherBoard/CSS/mbvars.css', mbvars_css => {
+    f.GET('../_MotherBoard/CSS/mb.css', mb_css => {
+      f.GET('../_MotherBoard/CSS/mbvars.css', mbvars_css => {
         var css = mb_css + mbvars_css;
         var ids = mbvars.section_ids;
         const replace = (id1, id2) => css = css.split('#mb-'+id1).join('#'+id2);

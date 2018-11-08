@@ -14,7 +14,7 @@ if (isset($_REQUEST['login'])      and isset($_REQUEST['password']) and
   if (list($userid)=mysqli_fetch_row($result)) {
     setcookie('login',   $login,   time()+5, '/');
     setcookie('check', 'occupied', time()+5, '/');
-    header('Location: ../../register.htm');
+    header('Location: ../../register');
   }
   else {
     $hash = hashGen($password);
@@ -23,7 +23,7 @@ if (isset($_REQUEST['login'])      and isset($_REQUEST['password']) and
       or exit ("INSERT $userTable... Query failed!");
 
     setcookie('login', $login, time()+5, '/');
-    header('Location: ../../login.htm');
+    header('Location: ../../login');
   }
 }
 else echo 'no login or password provided';

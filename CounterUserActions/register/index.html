@@ -3,9 +3,9 @@
   <meta charset=UTF-8>
   <title>ST1 - Register</title>
 
-  <link href=Auth/CSS/auth.css rel=stylesheet>
+  <link href=../_Auth/CSS/auth.css rel=stylesheet>
 
-  <script src=Auth/JS/authvars.js></script>
+  <script src=../_Auth/JS/authvars.js></script>
 
 </head>
 <body>
@@ -20,10 +20,10 @@
     functions.js, cookies.js and seq.php contain functions needed for module to work. <br>
   </p>
 
-  <button onclick=location.href='login.htm'> LOG IN  </button>
+  <button onclick=location.href='../login'> LOG IN  </button>
   <button onclick=location.href=mainpage>    INSIDE  </button>
 
-  <form action=Auth/PHP/register.php method=post>
+  <form action=../_Auth/PHP/register.php method=post>
     <input size=32 maxlength=32 required name=login    placeholder="new login">
     <input size=32 maxlength=32 required name=password placeholder="new password"
            type=password>
@@ -32,9 +32,9 @@
     <span  style=display:none> this login is already occupied </span>
   </form>
 
-  <script src=Common/JS/functions.js></script>
-  <script src=Common/JS/cookies.js  ></script>
-  <script src=Auth/JS/ifsession.js  ></script>
+  <script src=../_Common/JS/functions.js></script>
+  <script src=../_Common/JS/cookies.js  ></script>
+  <script src=../_Auth/JS/ifsession.js  ></script>
   <script>
     if (f.APIcookie.get('check')=='occupied') {
       document.forms[0].children[5].style.display = 'inline';

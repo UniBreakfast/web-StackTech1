@@ -1,0 +1,22 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: grid;
+  grid-template-areas:
+    "mb-header mb-header"
+    "mb-aside mb-section"
+    "mb-footer mb-footer";
+}
+
+/* ids do change automatically if they are changed in mbvars.js */
+#mb-header  { grid-area: mb-header  }
+#mb-aside   { grid-area: mb-aside   }
+#mb-section { grid-area: mb-section }
+#mb-footer  { grid-area: mb-footer  }
+
