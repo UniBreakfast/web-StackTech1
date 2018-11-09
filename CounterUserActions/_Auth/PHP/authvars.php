@@ -1,5 +1,5 @@
 <?php
 $sessionTable = 'test_sessions';
 $userTable    = 'test_users';
-$insidePage   = '..';
+$insidePage   = 'home';
 ?>

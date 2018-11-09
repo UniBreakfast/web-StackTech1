@@ -33,6 +33,7 @@
       }
       else if (response == 'valid') location.replace(mainpage);
     }
+
     const reportcb = response => alert(response);
     f.POST('../_Auth/PHP/ifsession.php?cookie='+user,
            inside? incb : outcb, reportcb);

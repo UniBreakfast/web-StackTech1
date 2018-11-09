@@ -3,7 +3,7 @@
   <meta charset=UTF-8>
   <title id=mb-title> CwUA - Main menu </title>
 
-  <script src=../_MotherBoard/JS/f.js>     </script>
+  <script src=../_Common/JS/f.js>          </script>
   <script src=../_MotherBoard/JS/mbvars.js></script>
   <script src=../_MotherBoard/JS/mb.js>    </script>
 
@@ -33,7 +33,11 @@
   <header  id=mb-header>   </header>
   <aside   id=mb-aside>    </aside>
   <section id=mb-section>  </section>
-  <footer  id=mb-footer>   </footer>
+  <footer  id=mb-footer>
+    <button onclick=location.href='../login'>               LOG IN </button>
+    <button onclick=location.href='../register'>           REGISTER</button>
+    <button onclick=location.href='../_Auth/PHP/logout.php'>LOG OUT</button>
+  </footer>
 
   <script>
     // applying options from mbvars.js to DOM
@@ -44,6 +48,8 @@
     if (ids.mb_footer ) f.byID('mb-footer' ).id = ids.mb_footer;
   </script>
 
+  <script src=../_Common/JS/cookies.js></script>
+  <script src=../_Auth/JS/ifsession.js></script>
 
 </body>
 </html>

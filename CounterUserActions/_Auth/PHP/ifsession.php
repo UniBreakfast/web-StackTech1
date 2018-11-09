@@ -18,7 +18,6 @@ if (isset($_REQUEST['cookie']) and trim($_REQUEST['cookie'])!=='') {
   if (list($id, $hash, $dtModify) = mysqli_fetch_row($result))
     if (hashCheck($bfp, $hash) and
         strtotime($dtModify)+216000 /*2.5days*/ - time() > 0) {
-      require_once $_SERVER['DOCUMENT_ROOT'].'StackTech1/Auth/PHP/seq.php';
       $newToken = tokenGen();
       $query = "UPDATE $sessionTable SET token='$newToken' WHERE id=$id";
       mysqli_query($db, $query)
