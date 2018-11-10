@@ -1,1 +1,27 @@
 <script src=hub.js></script>
+
+<script>
+
+  var Launch = 'launch';
+
+
+  function launch(data) {
+    console.log(data.sound)
+  }
+
+  function prepare_launch() {
+    hub.gr_sub(Launch, launch)
+  }
+
+  function launch_command() {
+    console.log('command received');
+    hub.gr_pub(Launch, 5, 'sound', 'Vshhhhhh!');
+  }
+
+  function engine_start(num) {
+    console.log('engine '+num+' started');
+    hub.gr_pub(Launch, 5);
+  }
+
+
+</script>
