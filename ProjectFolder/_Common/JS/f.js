@@ -1,4 +1,4 @@
-// functions container object
+// functions container object for common functions I use
 const f = {
   // to request do f.request(type, url, callback, reportcb, falldata, fallcb)
   request: function request(type, url, callback, reportcb, falldata, fallcb) {
@@ -27,7 +27,7 @@ const f = {
     request.send();
   },
 
-  // add style tag (with id) made from string to the head
+  // add style tag (with optional id) made from string to the head
   link_string_as_style_tag: (css, id) => {
     var style = document.createElement('style');
     style.textContent = css;
@@ -45,6 +45,5 @@ f.GET  = f.request.bind(this, 'GET');
 f.POST = f.request.bind(this, 'POST');
 
 // add style tag (with id) made from fetched css-file to the head
-f.link_css_as_style_tag = (css_file, id) =>
-  f.GET(css_file, css => f.link_string_as_style_tag(css, id));
-
+f.link_css_as_style_tag =
+  (css_file, id) => f.GET(css_file, css => f.link_string_as_style_tag(css, id));
