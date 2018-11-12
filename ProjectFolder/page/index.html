@@ -2,49 +2,28 @@
 <html>
 <head>
   <meta charset=UTF-8>
-  <title id=mb-title> ST1 WorkFlow - MotherBoard </title>
+  <title id=mb-title> ST1 - MotherBoard Preload </title>
 
-  <script src=../_Common/JS/f.js>     </script>
-  <script src=../_MotherBoard/JS/mbvars.js></script>
-  <script src=../_MotherBoard/JS/mb.js>    </script>
-
-  <script>
-    // applying options from mbvars.js to css
-    // while loading it from mb.css and mbvars.css
-    if (mbvars.title)
-      document.getElementById('mb-title').textContent = mbvars.title;
-    f.GET('../_MotherBoard/CSS/mb.css', mb_css => {
-      f.GET('../_MotherBoard/CSS/mbvars.css', mbvars_css => {
-        var css = mb_css + mbvars_css;
-        var ids = mbvars.section_ids;
-        const replace = (id1, id2) => css = css.split('#mb-'+id1).join('#'+id2);
-        if (ids.mb_header ) replace('header' , ids.mb_header );
-        if (ids.mb_aside  ) replace('aside'  , ids.mb_aside  );
-        if (ids.mb_section) replace('section', ids.mb_section);
-        if (ids.mb_footer ) replace('footer' , ids.mb_footer );
-        f.link_string_as_style_tag(css, 'mb-style');
-        mb();
-      })
-    });
-  </script>
-
+  <script src=../_Common/JS/f.js>  </script>
+  <script src=../_Common/JS/hub.js></script>
 
 </head>
 <body>
-  <header  id=mb-header>   </header>
-  <aside   id=mb-aside>    </aside>
-  <section id=mb-section>  </section>
-  <footer  id=mb-footer>   </footer>
 
-  <script>
-    // applying options from mbvars.js to DOM
-    var ids = mbvars.section_ids;
-    if (ids.mb_header ) f.byID('mb-header' ).id = ids.mb_header;
-    if (ids.mb_aside  ) f.byID('mb-aside'  ).id = ids.mb_aside;
-    if (ids.mb_section) f.byID('mb-section').id = ids.mb_section;
-    if (ids.mb_footer ) f.byID('mb-footer' ).id = ids.mb_footer;
+  <script>    // additional options on motherboard template loading
+    window.mb_more = {
+      alt_mbvars_css: '',
+      //alt_mbvars_css: '../_MotherBoard/CSS/mbvars copy.css',
+      css: 'body{background:black}',
+      data: {     // htmlContent for tags by id
+        'mb-section': 'main part of the page',
+        'mb-aside': 'side menu with vertical navigation or additional info',
+        'mb-header': 'header and or horizontal navigation',
+        'mb-footer': 'additional info, contacts, copyright etc'
+      }
+    }
   </script>
-
+  <script src=../_MotherBoard/JS/mbload.js></script>
 
 </body>
 </html>

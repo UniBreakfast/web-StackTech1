@@ -11,11 +11,11 @@ body {
   grid-template-columns: 1fr 3fr;
 
   /* next one is for the sidebar on the right */
-  /*grid-template-columns: 3fr 1fr;
+  grid-template-columns: 3fr 1fr;
   grid-template-areas:
     "mb-header mb-header"
     "mb-section mb-aside"
-    "mb-footer mb-footer";*/
+    "mb-footer mb-footer";
 }
 
 #mb-header {
