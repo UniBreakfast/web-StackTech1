@@ -33,3 +33,5 @@ body {
   color: yellow;
   font-weight: normal;
 }
+
+  body>*{padding-left:5px}
