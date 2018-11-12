@@ -59,27 +59,64 @@ const hub = (() => {
   // private storage for group subscriptions with callbacks for event handling
   const gr_subs = {}
 
+
+  function gr_set(e_name, pubs_req, subs_req, stay, once) {
+    if (!gr_subs[e_name]) gr_subs[e_name] = { pubs: 0, cb: [] }
+    var gr_e = gr_subs[e_name];
+    gr_e.pubs_req = pubs_req;
+    gr_e.subs_req = subs_req;
+    gr_e.subs_left = subs_req;
+    gr_e.stay = stay;
+    gr_e.once = once;
+    gr_try(e_name);
+  }
+
+  function gr_try(e_name) {
+    if (!gr_subs[e_name] || gr_subs[e_name].busy) return;
+    gr_subs[e_name].busy = true;
+    var gr_e = gr_subs[e_name];
+    if (gr_e.pubs == gr_e.pubs_req && gr_e.cb.length) {
+      while (gr_e.cb.length) {
+        var cb = gr_e.cb.pop();
+        cb(gr_e)
+
+        //////////////////////////////////////////////////////////
+
+      }
+    }
+  }
+
   // subscribe a callback for a full group of event publishes
-  function gr_sub(e_name, cb) {
+  function gr_sub(e_name, cb, total) {
+    if (!cb) throw 'no callback to subscribe';
+    if (total) gr_subs[e_name].total = total;
     if (!gr_subs[e_name]) gr_subs[e_name] = {cb: [cb]};
     else if (gr_subs[e_name].cb) gr_subs[e_name].cb.push(cb);
     else gr_subs[e_name].cb = [cb];
+
+    if (gr_subs[e_name].num == gr_subs[e_name].got) {
+      gr_subs[e_name].cb.forEach(cb => cb(gr_subs[e_name].data));
+      delete gr_subs[e_name].got;
+      delete gr_subs[e_name].data;
+    }
     return this;
   }
 
   // publish one event of a group
-  function gr_pub(e_name, num, data_name, data) {
-    if (!gr_subs[e_name]) gr_subs[e_name] = {num: num, got:1}
-    else {
-      gr_subs[e_name].num = num;
-      if  (gr_subs[e_name].got) gr_subs[e_name].got++;
-      else gr_subs[e_name].got = 1;
+  function gr_pub(e_name, total, data_name, data) {
+    if (total) {
+      if (!gr_subs[e_name]) gr_subs[e_name] = {total: total, got:1}
+      else {
+        gr_subs[e_name].total = total;
+        if  (gr_subs[e_name].got) gr_subs[e_name].got++;
+        else gr_subs[e_name].got = 1;
+      }
     }
     if (data_name) {
       if (!gr_subs[e_name].data) gr_subs[e_name].data = {}
       gr_subs[e_name].data[data_name] = data;
     }
-    if (num == gr_subs[e_name].got && gr_subs[e_name].cb.length) {
+    if (total == gr_subs[e_name].got && gr_subs[e_name].cb.length) {
       gr_subs[e_name].cb.forEach(cb => cb(gr_subs[e_name].data));
       delete gr_subs[e_name].got;
       delete gr_subs[e_name].data;
@@ -88,9 +125,9 @@ const hub = (() => {
   }
 
   // subscribe to and publish to a group event at once
-  function gr_subpub(e_name, cb, num, data_name, data) {
+  function gr_subpub(e_name, cb, total, data_name, data) {
     gr_sub(e_name, cb);
-    gr_pub(e_name, num, data_name, data);
+    gr_pub(e_name, total, data_name, data);
     return this;
   }
 
