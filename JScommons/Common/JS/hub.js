@@ -45,8 +45,8 @@ const hub = (() => {
 
   // list registered event subscriptions or callback handlers for events
   const list = (e_name) => {
-    if (e_name) return subs[e_name] || 'none';
-    else return Object.keys(subs);
+    if (e_name) console.log(subs[e_name]);
+    else        console.log(subs);
   }
 
   // public methods for hub object: publish (triggers event handlers), subscribe, unsubscribe, list
@@ -59,91 +59,105 @@ const hub = (() => {
   // private storage for group subscriptions with callbacks for event handling
   const gr_subs = {}
 
-
-  function gr_set(e_name, pubs_req, subs_req, stay, once) {
-    if (!gr_subs[e_name]) gr_subs[e_name] = { pubs: 0, cb: [] }
-    var gr_e = gr_subs[e_name];
-    gr_e.pubs_req = pubs_req;
-    gr_e.subs_req = subs_req;
-    gr_e.subs_left = subs_req;
-    gr_e.stay = stay;
-    gr_e.once = once;
-    gr_try(e_name);
-  }
-
+  // try running callbacks if all publishers signed
   function gr_try(e_name) {
-    if (!gr_subs[e_name] || gr_subs[e_name].busy) return;
-    gr_subs[e_name].busy = true;
+    if (!gr_subs[e_name]) return;
     var gr_e = gr_subs[e_name];
-    if (gr_e.pubs == gr_e.pubs_req && gr_e.cb.length) {
+    if (gr_e.busy) return;
+    else gr_e.busy = true;
+
+    if (gr_e.pubs_got >= gr_e.pubs_req && gr_e.cb.length) {
       while (gr_e.cb.length) {
         var cb = gr_e.cb.pop();
-        cb(gr_e)
-
-        //////////////////////////////////////////////////////////
-
+        cb(gr_e.data);
+        if (gr_e.subs_left>0) {
+          if  (gr_e.cb_)  gr_e.cb_.push(cb);
+          else gr_e.cb_ = [cb];
+        }
+        gr_e.subs_left--;
+      }
+      if (!gr_e.subs_left) {
+        if (gr_e.once) delete gr_subs[e_name];
+        else {
+          gr_e.pubs_got = 0;
+          gr_e.subs_left = gr_e.subs_req;
+          gr_e.cb = gr_e.cb_;
+          gr_e.cb_ = [];
+          gr_e.data = {};
+        }
       }
     }
+    gr_e.busy = false;
+    return this;
+  }
+
+  // creation of new named group subscribtion event
+  function gr_init(e_name) {
+    gr_subs[e_name] = { pubs_got: 0, cb: [], cb_: [], data: {} };
+  }
+
+  // setting named group subscribtion event with requirements
+  function gr_set(e_name, pubs_req, subs_req, once) {
+    if (!gr_subs[e_name]) gr_init(e_name);
+    var gr_e = gr_subs[e_name];
+    gr_e.pubs_req  = pubs_req;
+    gr_e.subs_req  = subs_req;
+    gr_e.subs_left = subs_req;
+    gr_e.once = once;
+
+    gr_try(e_name);
+    return this;
   }
 
   // subscribe a callback for a full group of event publishes
-  function gr_sub(e_name, cb, total) {
-    if (!cb) throw 'no callback to subscribe';
-    if (total) gr_subs[e_name].total = total;
-    if (!gr_subs[e_name]) gr_subs[e_name] = {cb: [cb]};
-    else if (gr_subs[e_name].cb) gr_subs[e_name].cb.push(cb);
-    else gr_subs[e_name].cb = [cb];
+  function gr_sub(e_name, cb) {
+    if (!gr_subs[e_name]) gr_init(e_name);
 
-    if (gr_subs[e_name].num == gr_subs[e_name].got) {
-      gr_subs[e_name].cb.forEach(cb => cb(gr_subs[e_name].data));
-      delete gr_subs[e_name].got;
-      delete gr_subs[e_name].data;
-    }
+    gr_subs[e_name].cb.push(cb);
+
+    gr_try(e_name);
     return this;
   }
 
   // publish one event of a group
-  function gr_pub(e_name, total, data_name, data) {
-    if (total) {
-      if (!gr_subs[e_name]) gr_subs[e_name] = {total: total, got:1}
-      else {
-        gr_subs[e_name].total = total;
-        if  (gr_subs[e_name].got) gr_subs[e_name].got++;
-        else gr_subs[e_name].got = 1;
-      }
-    }
-    if (data_name) {
-      if (!gr_subs[e_name].data) gr_subs[e_name].data = {}
-      gr_subs[e_name].data[data_name] = data;
-    }
-    if (total == gr_subs[e_name].got && gr_subs[e_name].cb.length) {
-      gr_subs[e_name].cb.forEach(cb => cb(gr_subs[e_name].data));
-      delete gr_subs[e_name].got;
-      delete gr_subs[e_name].data;
-    }
+  function gr_pub(e_name, data_key, data_value) {
+    if (!gr_subs[e_name]) gr_init(e_name);
+
+    gr_subs[e_name].pubs_got++;
+    if (data_key) gr_subs[e_name].data[data_key] = data_value;
+
+    gr_try(e_name);
     return this;
   }
 
   // subscribe to and publish to a group event at once
-  function gr_subpub(e_name, cb, total, data_name, data) {
+  function gr_subpub(e_name, cb, data_key, data_value) {
     gr_sub(e_name, cb);
-    gr_pub(e_name, total, data_name, data);
+    gr_pub(e_name, data_key, data_value);
     return this;
   }
 
   // unsubscribe whole group event or certain callback from it
   function gr_unsub(e_name, cb) {
-    if (!cb && gr_subs[e_name]) delete gr_subs[e_name];
-    else {
-      if (gr_subs[e_name]) {
+    if (gr_subs[e_name]) {
+      if (!cb) delete gr_subs[e_name];
+      else {
         var item = gr_subs[e_name].cb;
         item.splice(item.indexOf(cb), 1);
+            item = gr_subs[e_name].cb_;
+        item.splice(item.indexOf(cb), 1);
       }
-      if (!item.length) delete gr_subs[e_name];
     }
     return this;
   }
 
+  // show named group event(s) subscribtions status
+  const gr_log = e_name => {
+    if (e_name) console.log(gr_subs[e_name]);
+    else        console.log(gr_subs);
+  }
+
+  hub.gr_set    =    gr_set.bind(hub);
   hub.gr_pub    =    gr_pub.bind(hub);
   hub.gr_sub    =    gr_sub.bind(hub);
   hub.gr_unsub  =  gr_unsub.bind(hub);
