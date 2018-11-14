@@ -44,17 +44,10 @@ const hub = (() => {
   }
 
   // list registered event subscriptions or callback handlers for events
-  const list = (e_name) => {
+  const log = (e_name) => {
     if (e_name) console.log(subs[e_name]);
     else        console.log(subs);
   }
-
-  // public methods for hub object: publish (triggers event handlers), subscribe, unsubscribe, list
-  const hub = {list};
-  hub.pub   =   pub.bind(hub);
-  hub.sub   =   sub.bind(hub);
-  hub.unsub = unsub.bind(hub);
-  hub.sub1  =  sub1.bind(hub);
 
   // private storage for group subscriptions with callbacks for event handling
   const gr_subs = {}
@@ -109,6 +102,11 @@ const hub = (() => {
     return this;
   }
 
+  // setting named group subscribtion event for one round
+  function gr_set1(e_name, pubs_req, subs_req) {
+    return gr_set(e_name, pubs_req, subs_req, true);
+  }
+
   // subscribe a callback for a full group of event publishes
   function gr_sub(e_name, cb) {
     if (!gr_subs[e_name]) gr_init(e_name);
@@ -157,7 +155,17 @@ const hub = (() => {
     else        console.log(gr_subs);
   }
 
+
+  // public methods for hub object: publish (triggers event handlers), subscribe, unsubscribe, list
+  const hub = {log, gr_log};
+
+  hub.pub   =   pub.bind(hub);
+  hub.sub   =   sub.bind(hub);
+  hub.sub1  =  sub1.bind(hub);
+  hub.unsub = unsub.bind(hub);
+
   hub.gr_set    =    gr_set.bind(hub);
+  hub.gr_set1   =   gr_set1.bind(hub);
   hub.gr_pub    =    gr_pub.bind(hub);
   hub.gr_sub    =    gr_sub.bind(hub);
   hub.gr_unsub  =  gr_unsub.bind(hub);
@@ -165,4 +173,14 @@ const hub = (() => {
 
   return hub;
 })();
+
+// aliases for conventional meaning
+hub.do       = hub.sub;
+hub.do1      = hub.sub1;
+hub.go       = hub.pub;
+hub.off      = hub.unsub;
+hub.gr_do    = hub.gr_sub;
+hub.gr_go    = hub.gr_pub;
+hub.gr_do_go = hub.gr_subpub;
+hub.gr_off   = hub.gr_unsub;
 
