@@ -1,5 +1,3 @@
-'use strict';
-
 // pubsub hub - is a Hub module to use in Publish/Subscribe pattern
 const hub = (() => {
 
@@ -104,7 +102,9 @@ const hub = (() => {
 
   // setting named group subscribtion event for one round
   function gr_set1(e_name, pubs_req, subs_req) {
-    return gr_set(e_name, pubs_req, subs_req, true);
+    //return gr_set(e_name, pubs_req, subs_req, true);
+    gr_set(e_name, pubs_req, subs_req, true);
+    return this;
   }
 
   // subscribe a callback for a full group of event publishes
@@ -183,4 +183,3 @@ hub.gr_do    = hub.gr_sub;
 hub.gr_go    = hub.gr_pub;
 hub.gr_do_go = hub.gr_subpub;
 hub.gr_off   = hub.gr_unsub;
-

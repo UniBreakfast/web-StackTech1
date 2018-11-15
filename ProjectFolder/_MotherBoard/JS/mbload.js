@@ -1,14 +1,7 @@
-mb_more.styles = document.createElement('link');
-mb_more.styles.setAttribute('href', '../_MotherBoard/CSS/mb.css');
-mb_more.styles.setAttribute('rel', 'stylesheet');
-document.head.appendChild(mb_more.styles);
+f.link_css('../_MotherBoard/CSS/mb.css');
 
-mb_more.styles = document.createElement('link');
-if (mb_more.alt_mbvars_css)
-     mb_more.styles.setAttribute('href', mb_more.alt_mbvars_css);
-else mb_more.styles.setAttribute('href', '../_MotherBoard/CSS/mbvars.css');
-mb_more.styles.setAttribute('rel', 'stylesheet');
-document.head.appendChild(mb_more.styles);
+if (mb_more.alt_mbvars_css) f.link_css(mb_more.alt_mbvars_css);
+else                        f.link_css('../_MotherBoard/CSS/mbvars.css');
 
 /* // alternative way to load motherboard css
 f.GET('../_MotherBoard/CSS/mb.css', mb_css =>
@@ -25,5 +18,6 @@ f.GET('../_MotherBoard/HTML/mb.htm', htm => {
     for (let key in mb_more.data) f.byID(key).innerHTML = mb_more.data[key];
 
   delete window.mb_more;
-});
 
+  hub.gr_go('template_done');
+});
