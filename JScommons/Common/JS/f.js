@@ -1,3 +1,5 @@
+'use strict';
+
 // functions container object for common functions I use
 const f = {
   // aliases
