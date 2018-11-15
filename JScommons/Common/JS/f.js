@@ -1,5 +1,9 @@
 // functions container object for common functions I use
 const f = {
+  // aliases
+  byID:  document.getElementById.bind(document),
+  newEl: document.createElement .bind(document),
+
   // to request do f.request(type, url, callback, reportcb, falldata, fallcb)
   request: function request(type, url, callback, reportcb, falldata, fallcb) {
     const request = new XMLHttpRequest();
@@ -29,14 +33,18 @@ const f = {
 
   // add style tag (with optional id) made from string to the head
   link_string_as_style_tag: (css, id) => {
-    var style = document.createElement('style');
+    var style = f.newEl('style');
     style.textContent = css;
     if (id) style.id = id;
     document.head.appendChild(style);
   },
 
-  // alias
-  byID: document.getElementById.bind(document)
+  link_css: (css_file) => {
+    var link = f.newEl('link');
+    link.setAttribute('href', css_file);
+    link.setAttribute('rel', 'stylesheet');
+    document.head.appendChild(link);
+  },
 }
 
 // to request do f.GET(url, callback, reportcb, falldata, fallcb)

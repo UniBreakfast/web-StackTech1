@@ -104,7 +104,9 @@ const hub = (() => {
 
   // setting named group subscribtion event for one round
   function gr_set1(e_name, pubs_req, subs_req) {
-    return gr_set(e_name, pubs_req, subs_req, true);
+    //return gr_set(e_name, pubs_req, subs_req, true);
+    gr_set(e_name, pubs_req, subs_req, true);
+    return this;
   }
 
   // subscribe a callback for a full group of event publishes
@@ -142,7 +144,7 @@ const hub = (() => {
       else {
         var item = gr_subs[e_name].cb;
         item.splice(item.indexOf(cb), 1);
-            item = gr_subs[e_name].cb_;
+        item = gr_subs[e_name].cb_;
         item.splice(item.indexOf(cb), 1);
       }
     }
