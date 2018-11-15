@@ -1,5 +1,3 @@
-'use strict';
-
 // pubsub hub - is a Hub module to use in Publish/Subscribe pattern
 const hub = (() => {
 
