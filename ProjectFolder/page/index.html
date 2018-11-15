@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=UTF-8>
+  <title id=mb-title> ST1 - MotherBoard Preload </title>
+
+  <script src=../_Common/JS/f.js>  </script>
+  <script src=../_Common/JS/hub.js></script>
+
+</head>
+<body>
+
+  <script>    // additional options on motherboard template loading
+    window.mb_more = {
+      alt_mbvars_css: '',
+      //alt_mbvars_css: '../_MotherBoard/CSS/mbvars copy.css',
+      css: 'body{background:black}',
+      data: {     // htmlContent for tags by id
+        'mb-section': 'main part of the page',
+        'mb-aside'  : 'side menu with vertical navigation or additional info',
+        'mb-header' : 'header and or horizontal navigation',
+        'mb-footer' : 'additional info, contacts, copyright etc'
+      }
+    }
+  </script>
+  <script src=../_MotherBoard/JS/mbload.js></script>
+
+</body>
+</html>
