@@ -25,5 +25,22 @@
   </script>
   <script src=../_MotherBoard/JS/mbload.js></script>
 
+  <script> const c = {} // an object for component constructors </script>
+  <script src=../_Components/ThisComponent/JS/tcload.js></script>
+
+  <script>
+/*
+    setTimeout(()=>{
+      c.tc(f.byID('mb-section'), 'Abra', 'The most Cadabra of them all!');
+      c.tc(f.byID('mb-section'));
+      c.tc_(f.byID('mb-aside'));
+    }, 400);
+*/
+    hub.gr_set1('template_done', 4, 3)
+      .gr_do_go('template_done', ()=>c.tc(f.byID('mb-section'), 'Abra', 'The most Cadabra of them all!'))
+      .gr_do_go('template_done', ()=>c.tc_(f.byID('mb-footer')))
+      .gr_do_go('template_done', ()=>c.tc_(f.byID('mb-aside')));
+  </script>
+
 </body>
 </html>
