@@ -14,7 +14,39 @@
   </center>
 
   <script>
-    var data = 14;
+    const dm = {};
+
+    dm.endeavors = [];
+
+    class Endeavor {
+      constructor(_name, _cat) {
+        this.name = _name;
+        this.cat  = _cat;
+      }
+    }
+
+    dm.endeavors.push(new Endeavor('Разбогатеть', 'желание'));
+    dm.endeavors.push(new Endeavor('Стать красивее', 'мечта'));
+
+/*
+    var response = {
+      "Endeavors" : {
+        "class"  : "Endeavor",
+        "headers": ["name", "category", "deadline"],
+        "rows"   : [
+          ["Разбогатеть",     "желание",  "NULL"],
+          ["Стать красивее",  "мечта",    "NULL"]
+        ]
+      }
+    }
+*/
+    var response_json = '{"Endeavors":{"class":"Endeavor","headers":["name","category","deadline"],"rows":[["Разбогатеть","желание","NULL"],["Стать красивее","мечта","NULL"]]}}';
+
+    var response_obj = JSON.parse(response_json);
+
+    console.log(response_obj);
+
+
   </script>
 
 
