@@ -4,6 +4,10 @@
   <meta charset=UTF-8>
   <title> Faceless Data-Model </title>
 
+  <script src=JS/dm.js></script>
+  <script src=_Commons/JS/f.js></script>
+
+
 </head>
 <body>
   <center>
@@ -14,80 +18,35 @@
   </center>
 
   <script>
-    const dm = (()=>{
-      const dm = {}
-
-      class DBoid {}
-      class Tempoid {}
-
-      dm.classBuilder = function classBuilder(className, properties) {
-        let classDef = `dm["${className}"] = class ${className} extends DBoid {`;
-        if (properties) {
-          classDef += 'constructor('+properties.join()+'){super();'
-          properties.forEach(property =>
-                             classDef += `this.${property} = ${property};`);
-          classDef += '}';
-        }
-        classDef += '}';
-        eval(classDef);
-      }
-
-      dm.eatJSON = json => {
-        let obj = JSON.parse(json);
-        for (let [table, data] of Object.entries(obj)) {
-          dm[table] = [];
-          dm.classBuilder(data.class, data.headers);
-          data.rows.forEach(row => dm[table].push(new dm[data.class](...row)));
-        }
-      }
-
-      return dm;
-    })();
 
 /*
-    let className = 'Ball',
-        properties = ['color', 'size'],
-        params = ['red', 'small'];
-    dm.classBuilder(className, properties);
-    console.log(new dm[className](...params));
+    var response_json = `
+{
+  "endeavors" : {
+    "class"  : "Endeavor",
+    "headers": ["name", "category", "deadline"],
+    "rows"   : [
+      ["Разбогатеть",     "желание",  "NULL"],
+      ["Стать красивее",  "мечта",    "NULL"]
+    ]
+  },
+  "activities" : {
+    "class"  : "Activity",
+    "headers": ["name", "amount", "difficulty"],
+    "rows"   : [
+      ["Отжиматься", "20 раз",  7],
+      ["Работать",  "8 часов",  10]
+    ]
+  }
+}`;
 */
 
-/*
-    dm.endeavors = [];
-
-    //var className = 'Endeavor';
-
-    this['Endeavor'] = function (_name, _cat) {
-      this.name = _name;
-      this.cat  = _cat;
-    }
-    //Object.defineProperty(this[className], "name", { value: className });
-
-    dm.endeavors.push(new this['Endeavor']('Разбогатеть', 'желание'));
-    dm.endeavors.push(new this['Endeavor']('Стать красивее', 'мечта'));
-
-    console.log(dm);
-*/
-
-/*
-    var response = {
-      "endeavors" : {
-        "class"  : "Endeavor",
-        "headers": ["name", "category", "deadline"],
-        "rows"   : [
-          ["Разбогатеть",     "желание",  "NULL"],
-          ["Стать красивее",  "мечта",    "NULL"]
-        ]
-      }
-    }
-*/
-
-    var response_json = '{"endeavors":{"class":"Endeavor","headers":["name","category","deadline"],"rows":[["Разбогатеть","желание","NULL"],["Стать красивее","мечта","NULL"]]}}';
-
-    //var response_obj = JSON.parse(response_json);
-
-    dm.eatJSON(response_json);
-    console.log(dm);
+    f.GET('PHP/output.php', response_json =>{
+      dm.eatJSON(response_json, true);
+      console.log(dm);
+      console.log(dm.endeavors);
+      console.log(dm.activities);
+    });
 
 
   </script>
