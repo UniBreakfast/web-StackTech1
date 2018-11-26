@@ -4,7 +4,8 @@
   <meta charset=UTF-8>
   <title> Faceless Data-Model </title>
 
-  <script src=_Commons/JS/f.js></script>
+  <script src=_Commons/JS/f.js> </script>
+  <script src=_Commons/JS/dt.js></script>
   <script src=JS/dm.js></script>
 
 
@@ -19,34 +20,8 @@
 
   <script>
 
-/*
-    var response_json = `
-{
-  "endeavors" : {
-    "class"  : "Endeavor",
-    "headers": ["name", "category", "deadline"],
-    "rows"   : [
-      ["Разбогатеть",     "желание",  "NULL"],
-      ["Стать красивее",  "мечта",    "NULL"]
-    ]
-  },
-  "activities" : {
-    "class"  : "Activity",
-    "headers": ["name", "amount", "difficulty"],
-    "rows"   : [
-      ["Отжиматься", "20 раз",  7],
-      ["Работать",  "8 часов",  10]
-    ]
-  }
-}`;
-*/
 
-    f.GET('PHP/output.php', response_json =>{
-      dm.eatJSON(response_json, true);
-      console.log(dm);
-      console.log(dm.endeavors);
-      console.log(dm.activities);
-    });
+
 
 
   </script>
