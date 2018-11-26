@@ -24,20 +24,28 @@ $for_output = array (
 );
 */
 
-$test_endeavors =
-  f::getRecords($db, 'SELECT name, category, deadline FROM test_endeavors');
+$fields = trim($_REQUEST['fields']);
+if ($fields) {
+  $fields = json_decode($fields);
+  $test_endeavors =
+    f::getRecords($db, 'SELECT '.implode($fields, ', ').' FROM test_endeavors');
+}
+else {
+  $test_endeavors =
+    f::getRecords($db, 'SELECT name, category, deadline FROM test_endeavors');
+  $fields = array ('name', 'category', 'deadline');
+}
 
 $for_output = array (
   'endeavors' => array (
     'class'   => 'Endeavor',
-    'headers' => array ('name', 'category', 'deadline'),
+    'headers' => $fields,
     'rows'    => $test_endeavors
   )
 );
-//krumo($test_endeavors);
-//krumo($for_output);
 
 $output = json_encode($for_output);
+echo $output;
 
 /*
 $raw_output = '
@@ -60,7 +68,5 @@ $raw_output = '
   }
 }';
 */
-
-echo $output;
 
 ?>
