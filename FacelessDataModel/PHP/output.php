@@ -25,22 +25,16 @@ $for_output = array (
 */
 
 $fields = trim($_REQUEST['fields']);
-if ($fields) {
-  $fields = json_decode($fields);
-  $test_endeavors =
-    f::getRecords($db, 'SELECT '.implode($fields, ', ').' FROM test_endeavors');
-}
-else {
-  $test_endeavors =
-    f::getRecords($db, 'SELECT name, category, deadline FROM test_endeavors');
-  $fields = array ('name', 'category', 'deadline');
-}
+if ($fields) $fields = json_decode($fields);
+else         $fields = array ('name', 'category', 'deadline');
+$test_endeavors =
+  f::getRecords($db, 'SELECT '.implode($fields, ', ').' FROM test_endeavors');
 
 $for_output = array (
   'endeavors' => array (
-    'class'   => 'Endeavor',
-    'headers' => $fields,
-    'rows'    => $test_endeavors
+      'class'   => 'Endeavor',
+      'headers' => $fields,
+      'rows'    => $test_endeavors
   )
 );
 

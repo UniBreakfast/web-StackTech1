@@ -9,8 +9,7 @@ const dm = (()=>{
     let classDef = `dm["${className}"] = class ${className} extends DBoid {`;
     if (properties) {
       classDef += 'constructor('+properties.join()+'){super();'
-      properties.forEach(property =>
-                         classDef += `this.${property} = ${property};`);
+      properties.forEach(prop => classDef += `this.${prop} = ${prop};`);
       classDef += '}';
     }
     classDef += '}';
