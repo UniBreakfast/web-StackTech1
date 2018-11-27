@@ -24,11 +24,14 @@ $for_output = array (
 );
 */
 
+$table = trim($_REQUEST['table']);
+if (!$table) $table = 'test_endeavors';
+
 $fields = trim($_REQUEST['fields']);
 if ($fields) $fields = json_decode($fields);
 else         $fields = array ('name', 'category', 'deadline');
 $test_endeavors =
-  f::getRecords($db, 'SELECT '.implode($fields, ', ').' FROM test_endeavors');
+  f::getRecords($db, 'SELECT '.implode($fields, ', ').' FROM '.$table);
 
 $for_output = array (
   'endeavors' => array (
