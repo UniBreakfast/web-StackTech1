@@ -13,6 +13,7 @@ const dt = (()=>{
     if (new_field_list) field_list = new_field_list;
   }
 
+/*
   dt.get_whatever = function get_data_from_db_to_dm() {
     f.GET('PHP/output.php', response_json => {
       dm.eatJSON(response_json, true);
@@ -28,6 +29,7 @@ const dt = (()=>{
       console.log(dm);
     });
   }
+*/
 
   dt.get_fields = function get_certain_fields_from_db_to_dm(...fields) {
     fields = fields.map(field => {
@@ -37,9 +39,13 @@ const dt = (()=>{
       else throw 'no such field in field_list';
     })
 
-    if (fields) f.GET(route+'?table='+table+'&fields='+JSON.stringify(fields),
+    if (fields) f.GET(route+
+                      '?table='+table+
+                      '&fields='+JSON.stringify(fields)+
+                      '&check='+'yes',
                       response_json => {
-      dm.eatJSON(response_json, true);
+      if (response_json.startsWith('{')) dm.eatJSON(response_json, true);
+      else console.log(response_json);
       console.log(dm);
     });
   }

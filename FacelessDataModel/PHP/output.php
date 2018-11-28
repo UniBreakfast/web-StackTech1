@@ -24,6 +24,9 @@ $for_output = array (
 );
 */
 
+$check = trim($_REQUEST['check']);
+if (!filter_var($check, FILTER_VALIDATE_BOOLEAN)) exit ('check failed');
+
 $table = trim($_REQUEST['table']);
 if (!$table) $table = 'test_endeavors';
 
