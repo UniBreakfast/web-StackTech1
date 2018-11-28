@@ -24,8 +24,13 @@ $for_output = array (
 );
 */
 
-$check = trim($_REQUEST['check']);
-if (!filter_var($check, FILTER_VALIDATE_BOOLEAN)) exit ('check failed');
+$user = trim($_REQUEST['user']);
+if (!$user) exit ('no user name provided');
+else {
+  $userId = f::getValue($db, 'SELECT id FROM test_users WHERE login = ?',
+                        array(array($user,'s')));
+  if(!$userId) exit ('user not found');
+}
 
 $table = trim($_REQUEST['table']);
 if (!$table) $table = 'test_endeavors';
@@ -34,7 +39,8 @@ $fields = trim($_REQUEST['fields']);
 if ($fields) $fields = json_decode($fields);
 else         $fields = array ('name', 'category', 'deadline');
 $test_endeavors =
-  f::getRecords($db, 'SELECT '.implode($fields, ', ').' FROM '.$table);
+  f::getRecords($db, 'SELECT '.implode($fields, ', ') // $table not safe?
+                ." FROM $table WHERE user_id = ?", array(array($userId,'i')));
 
 $for_output = array (
   'endeavors' => array (

@@ -42,7 +42,7 @@ const dt = (()=>{
     if (fields) f.GET(route+
                       '?table='+table+
                       '&fields='+JSON.stringify(fields)+
-                      '&check='+'yes',
+                      '&user='+'Nina',
                       response_json => {
       if (response_json.startsWith('{')) dm.eatJSON(response_json, true);
       else console.log(response_json);
