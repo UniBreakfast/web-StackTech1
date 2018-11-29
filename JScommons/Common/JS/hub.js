@@ -8,6 +8,7 @@ const hub = (() => {
   function pub(e_name, data) {
     if (subs[e_name] && subs[e_name].length)
       subs[e_name].map(item=>item).forEach(cb => cb(data));
+    else console.log('"'+e_name+'" event published without any subscribers');
     return this;
   }
 
@@ -42,7 +43,7 @@ const hub = (() => {
   }
 
   // list registered event subscriptions or callback handlers for events
-  const log = (e_name) => {
+  const log = e_name => {
     if (e_name) console.log(subs[e_name]);
     else        console.log(subs);
   }
@@ -183,4 +184,3 @@ hub.gr_do    = hub.gr_sub;
 hub.gr_go    = hub.gr_pub;
 hub.gr_do_go = hub.gr_subpub;
 hub.gr_off   = hub.gr_unsub;
-
