@@ -1,4 +1,4 @@
-f.APIcookie = (function () {
+f.cookie = (function () {
   function extend () {
     var result = {};
     for (var i = 0; i < arguments.length; i++) {
@@ -12,9 +12,11 @@ f.APIcookie = (function () {
   const decode = s => s.replace(/(%[0-9A-Z]{2})+/g, decodeURIComponent);
 
   function set (key, value, attributes) {
+    if (typeof attributes == 'number') attributes = {expires: attributes}
+    
     attributes = extend({path: '/'}, API.defaults, attributes);
-
-    if (typeof attributes.expires === 'number')
+    
+    if (typeof attributes.expires == 'number')
       attributes.expires = new Date(new Date()*1 + attributes.expires * 864e+5);
 
     attributes.expires=attributes.expires? attributes.expires.toUTCString() : '';
