@@ -2,7 +2,7 @@
 const dt = (()=>{
   const dt = {}
 
-  let route = 'PHP/output.php';
+  let route = 'PHP/dt.php';
   let table = 'test_endeavors';
   let field_list = ['id', 'name', 'category', 'details', 'deadline',
                       'dt_create', 'dt_modify'];
@@ -15,7 +15,7 @@ const dt = (()=>{
 
 /*
   dt.get_whatever = function get_data_from_db_to_dm() {
-    f.GET('PHP/output.php', response_json => {
+    f.GET('PHP/dt.php', response_json => {
       dm.eatJSON(response_json, true);
       console.log(dm);
     });
@@ -42,12 +42,13 @@ const dt = (()=>{
     if (fields) f.GET(route+
                       '?table='+table+
                       '&fields='+JSON.stringify(fields)+
-                      '&user='+'Nina',
+                      '&user='+f.cookie.get('user'),
                       response_json => {
       if (response_json.startsWith('{')) dm.eatJSON(response_json, true);
+      else if (!response_json) console.log('response is empty');
       else console.log(response_json);
       console.log(dm);
-    });
+    }, console.log);
   }
 
   return dt;

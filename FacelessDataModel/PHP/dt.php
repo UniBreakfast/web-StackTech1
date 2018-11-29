@@ -24,6 +24,10 @@ $for_output = array (
 );
 */
 
+//require_once 'usercheck.php';
+//userCheck();
+
+
 $user = trim($_REQUEST['user']);
 if (!$user) exit ('no user name provided');
 else {
@@ -31,6 +35,7 @@ else {
                         array(array($user,'s')));
   if(!$userId) exit ('user not found');
 }
+
 
 $table = trim($_REQUEST['table']);
 if (!$table) $table = 'test_endeavors';

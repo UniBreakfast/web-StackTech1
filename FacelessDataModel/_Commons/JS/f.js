@@ -17,7 +17,8 @@ const f = {
             if (request.response !== '') callback(request.response);
             else callback();
           }
-          else alert('php file content returned instead of php-response');
+          else if (reportcb)
+            reportcb('php file content returned instead of php-response');
         }
         else {
           if (reportcb) reportcb('request.status is ' + request.status);
