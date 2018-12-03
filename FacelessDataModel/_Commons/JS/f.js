@@ -58,3 +58,5 @@ f.POST = f.request.bind(this, 'POST');
 // add style tag (with id) made from fetched css-file to the head
 f.link_css_as_style_tag =
   (css_file, id) => f.GET(css_file, css => f.link_string_as_style_tag(css, id));
+
+let log = console.log;

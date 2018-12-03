@@ -17,6 +17,7 @@ function userCheck($db, $sessionTable) {
     if (list($id, $hash, $dtModify) = f::getRecord($db, $query, $params)) {
       require_once '../_Commons/PHP/seq.php';
       //exit (hashGen($bfp));
+      //if (
       if (hashCheck($bfp, $hash) and
           strtotime($dtModify)+216000 /*2.5days*/ - time() > 0) {
         $newToken = tokenGen();
@@ -24,8 +25,7 @@ function userCheck($db, $sessionTable) {
         $query = "UPDATE $sessionTable SET token='$newToken' WHERE id=$id";
         mysqli_query($db, $query)
           or exit ("UPDATE $sessionTable SET token Query failed!");
-        //return " $newToken";
-        return "<a href=http://p.acoras.in.ua/FacelessDataModel/PHP/usercheck.php?userid=3&token=$newToken>$newToken</a>";
+        return $newToken;
       }
       else {
         $query = "DELETE FROM $sessionTable WHERE id=$id";
@@ -41,8 +41,18 @@ function userCheck($db, $sessionTable) {
   else                          return 'no token provided';
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'].'sandbox.php';
+# testing
+# ?userid=3&token=Wr7f40rlIc9YmcCL8lgPQrhEDMsWlLIp
+if (__FILE__ == $_SERVER['SCRIPT_FILENAME']) {
+  require_once $_SERVER['DOCUMENT_ROOT'].'sandbox.php';
 
-echo userCheck($db, 'test_sessions');
+  $result = userCheck($db, 'test_sessions');
+  if (substr($result, 0, 3) != 'no ')
+    echo "<a href=http://p.acoras.in.ua/FacelessDataModel/PHP/usercheck.php".
+                    "?userid=3&token=$result>
+                      $result
+                    </a>";
+  else echo $result;
+}
 
 ?>

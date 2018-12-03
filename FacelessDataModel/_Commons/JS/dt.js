@@ -51,5 +51,23 @@ const dt = (()=>{
     }, console.log);
   }
 
+  // exchange right login and password for userid and a token (newly created)
+  dt.signIn = function get_userId_and_token(login, password) {
+    let userid = f.cookie.get('userid'), token = f.cookie.get('token');
+    if (userid && token)
+      f.POST(`PHP/usercheck.php?userid=${userid}&token=${token}`, response => {
+        if (!response.startsWith('no ')) {
+          f.cookie.set('token', response, 2.5);
+          log('you are already signed in');
+        }
+        else sign_in();
+      }, log);
+    else sign_in();
+
+    function sign_in() {
+      log('you are going to sign in');
+    }
+  }
+
   return dt;
 })();
