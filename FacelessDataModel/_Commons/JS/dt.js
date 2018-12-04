@@ -55,7 +55,8 @@ const dt = (()=>{
   dt.signIn = function get_userId_and_token(login, password) {
     let userid = f.cookie.get('userid'), token = f.cookie.get('token');
     if (userid && token)
-      f.POST(`PHP/usercheck.php?userid=${userid}&token=${token}`, response => {
+      f.POST(`PHP/dt.php?task=usercheck&userid=${userid}&token=${token}`,
+             response => {
         if (!response.startsWith('no ')) {
           f.cookie.set('token', response, 2.5);
           log('you are already signed in');
@@ -65,6 +66,9 @@ const dt = (()=>{
     else sign_in();
 
     function sign_in() {
+
+
+
       log('you are going to sign in');
     }
   }
