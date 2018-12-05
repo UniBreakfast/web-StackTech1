@@ -49,11 +49,16 @@ class f
     f::_query($query, $db, $params);
   }
 
+  # simpy executes the query without returning anything
+  static function execute($db, $query, $params) {
+    f::_query($query, $db, $params);
+  }
+
   # retrieves a single field value from a database
   static function getValue($db, $query, $params) {
     list($q, $result) = f::_query($query, $db, $params);
     if ($fields = count($result[0])) {
-        $rows   = count($result);
+      $rows   = count($result);
       if ($rows>1 and $fields>1)
         exit("$q Query retrieved $rows rows with $fields fields "
              ."instead of one value!");
@@ -69,9 +74,9 @@ class f
   static function getValues($db, $query, $params) {
     list($q, $result) = f::_query($query, $db, $params);
     if ($fields = count($result[0])) {
-        $rows   = count($result);
+      $rows   = count($result);
       if ($fields>1) exit("$q Query retrieved $rows row(s) "
-              ."with $fields fields each instead of one field value per row!");
+                          ."with $fields fields each instead of one field value per row!");
       return array_map(function($row) { return $row[0]; }, $result);
     }
   }
@@ -80,7 +85,7 @@ class f
   static function getRecord($db, $query, $params) {
     list($q, $result) = f::_query($query, $db, $params);
     if ($fields = count($result[0])) {
-        $rows   = count($result);
+      $rows   = count($result);
       if ($rows>1) exit("$q Query retrieved $rows rows instead of one!");
       return $result[0];
     }
