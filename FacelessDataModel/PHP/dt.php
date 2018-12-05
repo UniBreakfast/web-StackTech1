@@ -41,19 +41,14 @@ switch ($_REQUEST['task']) {
       if (list($userid, $hash) = f::getRecord($db, $query, $param)) {
         $query = "DELETE FROM $sessionTable
                   WHERE dt_modify < NOW() - INTERVAL 60 HOUR";
-        mysqli_query($db, $query) or exit ("D F $sessionTable W d Q f");
+        f::execute($db, $query);
         require_once '../_Commons/PHP/seq.php';
         if (hashCheck($password, $hash)) {
           $query = "SELECT id FROM $sessionTable
-                WHERE user_id = $userid ORDER BY dt_create";
-          $result = mysqli_query($db, $query)
-            or exit ('SELECT id ORDER BY dt_create... Query failed!');
-          if (mysqli_num_rows($result)>2) {
-            list($id) = mysqli_fetch_row($result);
-            $query = "DELETE FROM $sessionTable WHERE id = $id";
-            mysqli_query($db, $query)
-              or exit ("DELETE FROM $sessionTable WHERE id... Query failed!");
-          }
+                    WHERE user_id = $userid ORDER BY dt_create";
+          $ids = f::getValues($db, $query);
+          if (sizeof($ids) > 2)
+            f::execute($db, "DELETE FROM $sessionTable WHERE id = ".$ids[0];);
 
           $addr     = $_SERVER['REMOTE_ADDR'];
           $addrpart = substr($addr, 0, strrpos($addr, '.'));
@@ -62,8 +57,7 @@ switch ($_REQUEST['task']) {
           $token    = tokenGen();
           $query = "INSERT $sessionTable (user_id, token, bfp_hash)
                     VALUE ($userid, '$token', '$hash')";
-          mysqli_query($db, $query)
-            or exit ('INSERT user_id, token... Query failed!');
+          f::execute($db, $query);
 
           echo json_encode(array($userid, $token));
         }

@@ -49,6 +49,11 @@ class f
     f::_query($query, $db, $params);
   }
 
+  # simpy executes the query without returning anything
+  static function execute($db, $query, $params) {
+    f::_query($query, $db, $params);
+  }
+
   # retrieves a single field value from a database
   static function getValue($db, $query, $params) {
     list($q, $result) = f::_query($query, $db, $params);

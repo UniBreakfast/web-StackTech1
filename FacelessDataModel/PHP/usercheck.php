@@ -23,14 +23,12 @@ function userCheck($db, $sessionTable) {
         $newToken = tokenGen();
         //$newToken = $token;
         $query = "UPDATE $sessionTable SET token='$newToken' WHERE id=$id";
-        mysqli_query($db, $query)
-          or exit ("UPDATE $sessionTable SET token Query failed!");
+        f::setValues($db, $query);
         return $newToken;
       }
       else {
         $query = "DELETE FROM $sessionTable WHERE id=$id";
-        mysqli_query($db, $query)
-          or exit ("DELETE FROM $sessionTable Query failed!");
+        f::execute($db, $query);
         echo "no session found with this userid/token pair";
       }
     }
