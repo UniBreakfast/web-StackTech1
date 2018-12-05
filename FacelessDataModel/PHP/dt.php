@@ -25,26 +25,24 @@ $for_output = array (
 );
 */
 
-//require_once 'usercheck.php';
-//userCheck();
+$userTable    = 'test_users';
+$sessionTable = 'test_sessions';
 
 switch ($_REQUEST['task']) {
   case 'usercheck': {
-    echo userCheck($db, 'test_sessions');
+    echo userCheck($db, $sessionTable);
   } break;
   case 'signin': {
-    if (isset($_REQUEST['login'])      and isset($_REQUEST['password']) and
-         trim($_REQUEST['login'])!=='' and  trim($_REQUEST['password'])!=='') {
-      $login    = trim($_REQUEST['login']);
-      $password = trim($_REQUEST['password']);
-      $query = "SELECT id, passhash FROM $userTable
-            WHERE login='$login'";
-      $result = mysqli_query($db, $query) or exit ('SELECT id Query failed!');
-      if (list($userid, $hash)=mysqli_fetch_row($result)) {
+    $login    = trim($_REQUEST['login']);
+    $password = trim($_REQUEST['password']);
+    if ($login and $password) {
+      $query = "SELECT id, passhash FROM $userTable WHERE login = ?";
+      $param = array(array($login, 's'));
+      if (list($userid, $hash) = f::getRecord($db, $query, $param)) {
         $query = "DELETE FROM $sessionTable
-              WHERE dt_modify < NOW() - INTERVAL 60 HOUR";
-        mysqli_query($db, $query)
-          or exit ("DELETE FROM $sessionTable WHERE dt_modify... Query failed!");
+                  WHERE dt_modify < NOW() - INTERVAL 60 HOUR";
+        mysqli_query($db, $query) or exit ("D F $sessionTable W d Q f");
+        require_once '../_Commons/PHP/seq.php';
         if (hashCheck($password, $hash)) {
           $query = "SELECT id FROM $sessionTable
                 WHERE user_id = $userid ORDER BY dt_create";
@@ -56,31 +54,24 @@ switch ($_REQUEST['task']) {
             mysqli_query($db, $query)
               or exit ("DELETE FROM $sessionTable WHERE id... Query failed!");
           }
+
           $addr     = $_SERVER['REMOTE_ADDR'];
           $addrpart = substr($addr, 0, strrpos($addr, '.'));
           $agent    = $_SERVER['HTTP_USER_AGENT'];
           $hash     = hashGen("$addrpart $agent");
           $token    = tokenGen();
           $query = "INSERT $sessionTable (user_id, token, bfp_hash)
-                VALUE ($userid, '$token', '$hash')";
+                    VALUE ($userid, '$token', '$hash')";
           mysqli_query($db, $query)
             or exit ('INSERT user_id, token... Query failed!');
-          setcookie('user', "$userid|$token", time()+216000, '/');
-          header("Location: ../../$insidePage");
+
+          echo json_encode(array($userid, $token));
         }
-        else {
-          setcookie('login',    $login,    time()+5, '/');
-          setcookie('check', 'wrong_pass', time()+5, '/');
-          header('Location: ../../login.htm');
-        }
+        else echo 'wrong password';
       }
-      else {
-        setcookie('login',    $login,     time()+5, '/');
-        setcookie('check', 'wrong_login', time()+5, '/');
-        header('Location: ../../login.htm');
-      }
+      else echo 'no user with this login';
     }
-    else echo 'no login or password provided';
+    else echo 'no login and/or password provided';
   } break;
   default: {
     $user = trim($_REQUEST['user']);
