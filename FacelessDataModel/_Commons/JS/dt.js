@@ -5,7 +5,7 @@ const dt = (()=>{
   let route = 'PHP/dt.php';
   let table = 'test_endeavors';
   let field_list = ['id', 'name', 'category', 'details', 'deadline',
-                      'dt_create', 'dt_modify'];
+                    'dt_create', 'dt_modify'];
 
   dt.setRoute = function setRoute(name, new_route, new_table, new_field_list) {
     if (new_route) route = new_route;
@@ -32,14 +32,15 @@ const dt = (()=>{
 */
 
   dt.get_fields = function get_certain_fields_from_db_to_dm(...fields) {
-    fields = fields.map(field => {
+    if (fields.length) fields = fields.map(field => {
       if (typeof(field)=='string' && field_list.includes(field)) return field;
       else if (typeof(field)=='number' && field<field_list.length)
         return field_list[field];
       else throw 'no such field in field_list';
-    })
+    });
+    else fields = field_list;
 
-    if (fields) f.GET(route+
+    if (fields.length) f.GET(route+
                       '?table='+table+
                       '&fields='+JSON.stringify(fields)+
                       '&user='+f.cookie.get('user'),
@@ -49,6 +50,33 @@ const dt = (()=>{
       else console.log(response_json);
       console.log(dm);
     }, console.log);
+  }
+
+  dt.ask_fields = function ask_for_certain_fields_from_db_to_dm(...fields) {
+    let userid = f.cookie.get('userid'), token = f.cookie.get('token');
+    if (userid && token) {
+      if (fields.length) fields = fields.map(field => {
+        if (typeof(field)=='string' && field_list.includes(field)) return field;
+        else if (typeof(field)=='number' && field<field_list.length)
+          return field_list[field];
+        else throw 'no such field in field_list';
+      });
+      else fields = field_list;
+
+      if (fields.length)
+        f.GET(`PHP/dt.php?userid=${userid}&token=${token}&table=${table}&fields=`
+              +JSON.stringify(fields),
+          response => {
+          if (response.endsWith('}')) {
+            f.cookie.set( 'token', response.substr(0,31), 2.5);
+            dm.eatJSON(response.substr(32), true);
+            log(dm);
+          }
+          else if (!response) log('response is empty');
+          else log(response);
+        }, log);
+    }
+    else log('you are not even signed in');
   }
 
   // exchange right login and password for userid and a token (newly created)
@@ -85,6 +113,23 @@ const dt = (()=>{
         }
       });
     }
+  }
+
+  dt.signOut = function drop_current_session() {
+    let userid = f.cookie.get('userid'), token = f.cookie.get('token');
+    if (userid && token) {
+      log ('cookie found, going to signout');
+      f.POST(`PHP/dt.php?task=signout&userid=${userid}&token=${token}`,
+             response => {
+        if (response.startsWith('no ')) log(response);
+        else {
+          f.cookie.remove('userid');
+          f.cookie.remove('token');
+          log(response);
+        }
+      }, log);
+    }
+    else log('you are not even signed in');
   }
 
   return dt;

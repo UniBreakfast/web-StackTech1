@@ -1,6 +1,6 @@
 <?php
 
-function signIn($db, $sessionTable) {
+function signIn($db, $userTable, $sessionTable) {
   $login    = trim($_REQUEST['login']);
   $password = trim($_REQUEST['password']);
   if ($login and $password) {
@@ -16,7 +16,7 @@ function signIn($db, $sessionTable) {
                     WHERE user_id = $userid ORDER BY dt_create";
         $ids = f::getValues($db, $query);
         if (sizeof($ids) > 2)
-          f::execute($db, "DELETE FROM $sessionTable WHERE id = ".$ids[0];);
+          f::execute($db, "DELETE FROM $sessionTable WHERE id = ".$ids[0]);
 
         $addr     = $_SERVER['REMOTE_ADDR'];
         $addrpart = substr($addr, 0, strrpos($addr, '.'));
@@ -41,13 +41,6 @@ function signIn($db, $sessionTable) {
 if (__FILE__ == $_SERVER['SCRIPT_FILENAME']) {
   require_once $_SERVER['DOCUMENT_ROOT'].'sandbox.php';
 
-  $result = userCheck($db, 'test_sessions');
-  if (substr($result, 0, 3) != 'no ')
-    echo "<a href=http://p.acoras.in.ua/FacelessDataModel/PHP/usercheck.php".
-                    "?userid=3&token=$result>
-                      $result
-                    </a>";
-  else echo $result;
 }
 
 ?>

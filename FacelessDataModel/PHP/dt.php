@@ -33,42 +33,21 @@ switch ($_REQUEST['task']) {
     echo userCheck($db, $sessionTable);
   } break;
   case 'signin': {
-    $login    = trim($_REQUEST['login']);
-    $password = trim($_REQUEST['password']);
-    if ($login and $password) {
-      $query = "SELECT id, passhash FROM $userTable WHERE login = ?";
-      $param = array(array($login, 's'));
-      if (list($userid, $hash) = f::getRecord($db, $query, $param)) {
-        $query = "DELETE FROM $sessionTable
-                  WHERE dt_modify < NOW() - INTERVAL 60 HOUR";
-        f::execute($db, $query);
-        require_once '../_Commons/PHP/seq.php';
-        if (hashCheck($password, $hash)) {
-          $query = "SELECT id FROM $sessionTable
-                    WHERE user_id = $userid ORDER BY dt_create";
-          $ids = f::getValues($db, $query);
-          if (sizeof($ids) > 2)
-            f::execute($db, "DELETE FROM $sessionTable WHERE id = ".$ids[0];);
-
-          $addr     = $_SERVER['REMOTE_ADDR'];
-          $addrpart = substr($addr, 0, strrpos($addr, '.'));
-          $agent    = $_SERVER['HTTP_USER_AGENT'];
-          $hash     = hashGen("$addrpart $agent");
-          $token    = tokenGen();
-          $query = "INSERT $sessionTable (user_id, token, bfp_hash)
-                    VALUE ($userid, '$token', '$hash')";
-          f::execute($db, $query);
-
-          echo json_encode(array($userid, $token));
-        }
-        else echo 'wrong password';
-      }
-      else echo 'no user with this login';
-    }
-    else echo 'no login and/or password provided';
+    require_once 'signin.php';
+    echo signIn($db, $userTable, $sessionTable);
+  } break;
+  case 'signout': {
+    require_once 'signout.php';
+    echo signOut($db, $sessionTable);
   } break;
   default: {
-    $user = trim($_REQUEST['user']);
+    $check = userCheck($db, $sessionTable);
+    echo $check;
+    if ($check.strpos('no ') === 0) break;
+
+##########################################################################
+
+
     if (!$user) exit ('no user name provided');
     else {
       $userId = f::getValue($db, 'SELECT id FROM test_users WHERE login = ?',
