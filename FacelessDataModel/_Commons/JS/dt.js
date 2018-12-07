@@ -31,28 +31,9 @@ const dt = (()=>{
   }
 */
 
-  dt.get_fields = function get_certain_fields_from_db_to_dm(...fields) {
-    if (fields.length) fields = fields.map(field => {
-      if (typeof(field)=='string' && field_list.includes(field)) return field;
-      else if (typeof(field)=='number' && field<field_list.length)
-        return field_list[field];
-      else throw 'no such field in field_list';
-    });
-    else fields = field_list;
+  dt.getFields = function get_certain_fields_from_db_to_dm(...fields) {}
 
-    if (fields.length) f.GET(route+
-                      '?table='+table+
-                      '&fields='+JSON.stringify(fields)+
-                      '&user='+f.cookie.get('user'),
-                      response_json => {
-      if (response_json.startsWith('{')) dm.eatJSON(response_json, true);
-      else if (!response_json) console.log('response is empty');
-      else console.log(response_json);
-      console.log(dm);
-    }, console.log);
-  }
-
-  dt.ask_fields = function ask_for_certain_fields_from_db_to_dm(...fields) {
+  dt.askFields = function ask_for_certain_fields_from_db_to_dm(...fields) {
     let userid = f.cookie.get('userid'), token = f.cookie.get('token');
     if (userid && token) {
       if (fields.length) fields = fields.map(field => {
@@ -68,7 +49,7 @@ const dt = (()=>{
               +JSON.stringify(fields),
           response => {
           if (response.endsWith('}')) {
-            f.cookie.set( 'token', response.substr(0,31), 2.5);
+            f.cookie.set('token', response.substr(0,32), 2.5);
             dm.eatJSON(response.substr(32), true);
             log(dm);
           }
@@ -121,7 +102,7 @@ const dt = (()=>{
       log ('cookie found, going to signout');
       f.POST(`PHP/dt.php?task=signout&userid=${userid}&token=${token}`,
              response => {
-        if (response.startsWith('no ')) log(response);
+        if (response.startsWith('no%20')) log(response);
         else {
           f.cookie.remove('userid');
           f.cookie.remove('token');

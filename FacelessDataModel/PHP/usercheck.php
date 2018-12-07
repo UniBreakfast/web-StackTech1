@@ -29,10 +29,10 @@ function userCheck($db, $sessionTable) {
       else {
         $query = "DELETE FROM $sessionTable WHERE id=$id";
         f::execute($db, $query);
-        echo "no session found with this userid/token pair";
+        return "no session found with this userid/token pair";
       }
     }
-    else echo "no session found with this userid/token pair";
+    else return "no session found with this userid/token pair";
   }
   elseif (!$userId and !$token) return 'no userid or token provided';
   elseif (!$userId)             return 'no user id provided';

@@ -43,18 +43,9 @@ switch ($_REQUEST['task']) {
   default: {
     $check = userCheck($db, $sessionTable);
     echo $check;
-    if ($check.strpos('no ') === 0) break;
+    if (strpos($check, 'no ') === 0) break;
 
-##########################################################################
-
-
-    if (!$user) exit ('no user name provided');
-    else {
-      $userId = f::getValue($db, 'SELECT id FROM test_users WHERE login = ?',
-                            array(array($user,'s')));
-      if(!$userId) exit ('user not found');
-    }
-
+    $userId = trim($_REQUEST['userid']);
 
     $table = trim($_REQUEST['table']);
     if (!$table) $table = 'test_endeavors';
@@ -62,9 +53,10 @@ switch ($_REQUEST['task']) {
     $fields = trim($_REQUEST['fields']);
     if ($fields) $fields = json_decode($fields);
     else         $fields = array ('name', 'category', 'deadline');
-    $test_endeavors =
-      f::getRecords($db, 'SELECT '.implode($fields, ', ') // $table not safe?
-                    ." FROM $table WHERE user_id = ?", array(array($userId,'i')));
+
+    $query = 'SELECT '.implode($fields, ', ')." FROM $table WHERE user_id = ?";
+    $param = array(array($userId,'i'));
+    $test_endeavors = f::getRecords($db, $query, $param);
 
     $for_output = array (
       'endeavors' => array (

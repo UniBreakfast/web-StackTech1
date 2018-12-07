@@ -21,7 +21,8 @@ const dm = (()=>{
     for (let [table, data] of Object.entries(obj)) {
       dm[table] = [];
       dm.classBuilder(data.class, data.headers);
-      data.rows.forEach(row => dm[table].push(new dm[data.class](...row)));
+      if (data.rows)
+        data.rows.forEach(row => dm[table].push(new dm[data.class](...row)));
     }
     if (keep) dm.lastJSON = json;
     else      dm.lastJSON = null;
