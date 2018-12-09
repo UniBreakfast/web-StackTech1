@@ -22,7 +22,11 @@ const clerk = (()=>{
       f.POST(clerk_php+'?task=login'+'&login='+login+'&pass='+pass,
              response => {
         response = JSON.parse(response);
-
+        if (response.data) {
+          f.cookie.set('userid', response.data.userid, response.data.expire);
+          f.cookie.set('token',  response.data.token,  response.data.expire);
+        }
+        log(response);
       }, log);
     else {
       let response = { msg: { type: 'ERROR', code: 106,

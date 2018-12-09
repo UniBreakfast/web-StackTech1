@@ -14,7 +14,7 @@ $tblSessions = 'test_sessions';
 # number of sessions at the same time per user
 $sessNum = 3;
 
-# hours until session expires
-$sessTime = 120;
+# days until session expires
+$sessTime = 5;
 
 ?>
