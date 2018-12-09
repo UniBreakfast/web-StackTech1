@@ -96,5 +96,15 @@ class f
     list($q, $result) = f::_query($query, $db, $params);
     return $result;
   }
+
+  # returns list of values for provided $_REQUEST keys
+  static function request($str1=0, $str2=0, $str3=0, $str4=0, $str5=0,
+                          $str6=0, $str7=0, $str8=0, $str9=0, $str10=0) {
+    for ($i=1; $i<11; $i++) {
+      $str = 'str'.$i;
+      if (${$str}) $values[] = trim($_REQUEST[${$str}]);
+    }
+    if ($values) return $values;
+  }
 }
 ?>

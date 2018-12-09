@@ -1,5 +1,8 @@
 <?php
 
+# where to find f.php, krumo etc
+$commonsPath = '../../_Commons/PHP/';
+
 # name of the users-table in the database
 //$tblUsers = 'users';
 $tblUsers = 'test_users';

@@ -59,4 +59,9 @@ f.POST = f.request.bind(this, 'POST');
 f.link_css_as_style_tag =
   (css_file, id) => f.GET(css_file, css => f.link_string_as_style_tag(css, id));
 
-let log = console.log;
+//let log = console.log;
+
+function log(subj) {
+  if (subj.msg) console.log(subj.msg.type+' '+subj.msg.code+': '+subj.msg.text);
+  else console.log(subj);
+}

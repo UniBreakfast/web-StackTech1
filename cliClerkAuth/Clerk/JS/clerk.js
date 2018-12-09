@@ -1,9 +1,35 @@
 // data-model object with methods to feed itself with JSON to collect data
 const clerk = (()=>{
 
-  function SignUp() {}
+  var clerk_php = 'Clerk/PHP/clerk.php';
 
-  function SignIn() {}
+  // 'Clerk/PHP/clerk.php' is set by default
+  function setPath(path_to_clerk_php) { clerk_php = path_to_clerk_php }
+
+  function SignUp(login, pass) {
+    if (login && pass)
+      f.POST(clerk_php+'?task=reg'+'&login='+login+'&pass='+pass,
+             response => log(JSON.parse(response)), log);
+    else {
+      let response = { msg: { type: 'ERROR', code: 102,
+                              text: 'Not enough data to register!' } }
+      log(response);
+    }
+  }
+
+  function SignIn(login, pass) {
+    if (login && pass)
+      f.POST(clerk_php+'?task=login'+'&login='+login+'&pass='+pass,
+             response => {
+        response = JSON.parse(response);
+
+      }, log);
+    else {
+      let response = { msg: { type: 'ERROR', code: 106,
+                             text: 'Not enough data to sign in!' } }
+      log(response);
+    }
+  }
 
   function isSignedIn() {}
 
@@ -17,7 +43,8 @@ const clerk = (()=>{
 
 
 
-  const dt = {SignUp, SignIn, isSignedIn, SignOut,
+  const dt = {setPath,
+              SignUp, SignIn, isSignedIn, SignOut,
               ChangePass, ChangeLogin, UnRegister}
 
   // exchange right login and password for userid and a token (newly created)
