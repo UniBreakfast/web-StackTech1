@@ -1,3 +1,5 @@
+'use strict';
+
 // data-model object with methods to feed itself with JSON to collect data
 const clerk = (()=>{
 
@@ -10,55 +12,79 @@ const clerk = (()=>{
     if (login && pass)
       f.POST(clerk_php+'?task=reg'+'&login='+login+'&pass='+pass,
              response => log(JSON.parse(response)), log);
-    else log(new Response(102, 'E', 'Not enough data to register!'));
+    else log(new Response(102, 'E', 'Not enough credentials to register!'));
   }
 
   function SignIn(login, pass) {
     if (login && pass)
       f.POST(clerk_php+'?task=login'+'&login='+login+'&pass='+pass,
              response => {
-        response = JSON.parse(response);
-        if (response.data) {
-          f.cookie.set('userid', response.data.userid, response.data.expire);
-          f.cookie.set('token',  response.data.token,  response.data.expire);
+        response = JSON.parse(response);      let d;
+        if (d = response.data) {
+          f.cookie.set('userid', d.userid, d.expire);
+          f.cookie.set('token',  d.token,  d.expire);
         }
         log(response);
       }, log);
-    else {
-      let response = { msg: { type: 'ERROR', code: 106,
-                             text: 'Not enough data to sign in!' } }
-      log(response);
-    }
+    else log(new Response(106, 'E', 'Not enough credentials to sign in!'));
   }
 
   function isSignedIn() {
-    const userid = f.cookie.get('userid');
-    let token = f.cookie.get('token');
+    const userid = f.cookie.get('userid'), token = f.cookie.get('token');
     if (userid && token)
       f.POST(clerk_php+'?task=check'+'&userid='+userid+'&token='+token,
              response => {
-        response = JSON.parse(response);
-      if (response.data) {
-        f.cookie.set('userid', response.data.userid, response.data.expire);
-        f.cookie.set('token',  response.data.token,  response.data.expire);
+        response = JSON.parse(response);      let d;
+      if (d = response.data) {
+        f.cookie.set('userid', userid,  d.expire);
+        f.cookie.set('token',  d.token, d.expire);
       }
       log(response);
     }, log);
+    else log(new Response(109, 'F', 'No complete session cookie found'));
   }
 
-  function SignOut() {}
+  function SignOut() {
+    const userid = f.cookie.get('userid'), token = f.cookie.get('token');
+    if (userid && token) {
+      f.POST(clerk_php+'?task=logout'+'&userid='+userid+'&token='+token, 0,log);
+      f.cookie.remove('userid');
+      f.cookie.remove('token');
+      log(new Response(111, 'S', 'Signed out'));
+    }
+    else log(new Response(113, 'I', 'You are not signed in!'));
+  }
 
-  function ChangePass() {}
+  function ChangePassword(login, oldpass, newpass) {
+    if (login && oldpass && newpass)
+      f.POST(clerk_php+'?task=newpass'+
+             '&login='+login+'&oldpass='+oldpass+'&newpass='+newpass,
+             response => log(JSON.parse(response), log));
+    else log(new Response(117, 'E',
+                          'Not enough credentials to change password!'));
+  }
 
-  function ChangeLogin() {}
+  function ChangeLogin(oldlogin, pass, newlogin) {
+    if (oldlogin && pass && newlogin)
+      f.POST(clerk_php+'?task=rename'+
+             '&oldlogin='+oldlogin+'&pass='+pass+'&newlogin='+newlogin,
+             response => log(JSON.parse(response), log));
+    else log(new Response(121, 'E',
+                          'Not enough credentials to change login!'));
+  }
 
-  function UnRegister() {}
+  function UnRegister(login, pass) {
+    if (login && pass)
+      f.POST(clerk_php+'?task=unreg'+'&login='+login+'&pass='+pass,
+             response => log(JSON.parse(response), log));
+    else log(new Response(125, 'E', 'Not enough credentials to unregister!'));
+  }
 
 
 
   const dt = {setPath,
               SignUp, SignIn, isSignedIn, SignOut,
-              ChangePass, ChangeLogin, UnRegister}
+              ChangePassword, ChangeLogin, UnRegister}
 
   // exchange right login and password for userid and a token (newly created)
   dt.signIn = function get_userId_and_token(login, password) {

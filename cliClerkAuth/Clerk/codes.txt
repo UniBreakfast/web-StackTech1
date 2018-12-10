@@ -10,7 +10,7 @@ Login $login already occupied
 
 102
 ERROR
-Not enough data to register!
+Not enough credentials to register!
 
 SignIn() ///////////////////////////////////////////////////////////////////////
 
@@ -28,13 +28,13 @@ Can't sign in. User $login not found!
 
 106
 ERROR
-Not enough data to sign in!
+Not enough credentials to sign in!
 
 isSignedIn() ///////////////////////////////////////////////////////////////////
 
 107
 INFO
-Currently you are signed in
+Session confirmed, you are signed in
 
 108
 INFO
@@ -42,6 +42,76 @@ No such session in act
 
 109
 FAIL
-No session cookie found
+No complete session cookie found
 
-////////////////////////////////////////////////////////////////////////////////
+110
+ERROR
+No complete session cookie provided
+
+SignOut() //////////////////////////////////////////////////////////////////////
+
+111
+SUCCESS
+Signed out
+
+112
+ERROR
+No complete session cookie provided
+
+113
+INFO
+You are not signed in!
+
+ChangePassword() ///////////////////////////////////////////////////////////////
+
+114
+SUCCESS
+Password changed for user $login
+
+115
+FAIL
+Can't change password. Incorrect password!
+
+116
+FAIL
+Can't change password. No user $login found!
+
+117
+ERROR
+Not enough credentials to change password!
+
+ChangeLogin() //////////////////////////////////////////////////////////////////
+
+118
+SUCCESS
+Login changed from $oldlogin to $newlogin
+
+119
+FAIL
+Can't change login. Incorrect password!
+
+120
+FAIL
+Can't change login. No user $oldlogin found!
+
+121
+ERROR
+Not enough credentials to change login!
+
+UnRegister() ///////////////////////////////////////////////////////////////////
+
+122
+SUCCESS
+User $login removed!
+
+123
+FAIL
+Can't unregister. Incorrect password!
+
+124
+FAIL
+Can't unregister. No user with login $login found!
+
+125
+ERROR
+Not enough credentials to unregister!

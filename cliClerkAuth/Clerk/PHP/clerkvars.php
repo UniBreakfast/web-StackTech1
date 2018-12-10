@@ -15,6 +15,6 @@ $tblSessions = 'test_sessions';
 $sessNum = 3;
 
 # days until session expires
-$sessTime = 5;
+$sessExpire = 5;
 
 ?>
