@@ -10,11 +10,7 @@ const clerk = (()=>{
     if (login && pass)
       f.POST(clerk_php+'?task=reg'+'&login='+login+'&pass='+pass,
              response => log(JSON.parse(response)), log);
-    else {
-      let response = { msg: { type: 'ERROR', code: 102,
-                              text: 'Not enough data to register!' } }
-      log(response);
-    }
+    else log(new Response(102, 'E', 'Not enough data to register!'));
   }
 
   function SignIn(login, pass) {
@@ -35,7 +31,20 @@ const clerk = (()=>{
     }
   }
 
-  function isSignedIn() {}
+  function isSignedIn() {
+    const userid = f.cookie.get('userid');
+    let token = f.cookie.get('token');
+    if (userid && token)
+      f.POST(clerk_php+'?task=check'+'&userid='+userid+'&token='+token,
+             response => {
+        response = JSON.parse(response);
+      if (response.data) {
+        f.cookie.set('userid', response.data.userid, response.data.expire);
+        f.cookie.set('token',  response.data.token,  response.data.expire);
+      }
+      log(response);
+    }, log);
+  }
 
   function SignOut() {}
 

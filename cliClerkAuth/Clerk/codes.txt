@@ -1,27 +1,47 @@
+SingUp() ///////////////////////////////////////////////////////////////////////
+
 100
 SUCCESS
 User $login is registered!
 
 101
-FAILED
+FAIL
 Login $login already occupied
 
 102
 ERROR
 Not enough data to register!
 
+SignIn() ///////////////////////////////////////////////////////////////////////
+
 103
 SUCCESS
 You are signed in now as $login!
 
 104
-FAILED
+FAIL
 Can't sign in. Incorrect password!
 
 105
-FAILED
+FAIL
 Can't sign in. User $login not found!
 
 106
 ERROR
 Not enough data to sign in!
+
+isSignedIn() ///////////////////////////////////////////////////////////////////
+
+107
+INFO
+Currently you are signed in
+
+108
+INFO
+No such session in act
+
+109
+FAIL
+No session cookie found
+
+////////////////////////////////////////////////////////////////////////////////

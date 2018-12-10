@@ -98,11 +98,12 @@ class f
   }
 
   # returns list of values for provided $_REQUEST keys
-  static function request($str1=0, $str2=0, $str3=0, $str4=0, $str5=0,
-                          $str6=0, $str7=0, $str8=0, $str9=0, $str10=0) {
-    for ($i=1; $i<11; $i++) {
+  static function request($str1=null, $str2=null, $str3=null, $str4=null,
+                          $str5=null, $str6=null, $str7=null, $str8=null) {
+    for ($i=1; $i<9; $i++) {
       $str = 'str'.$i;
       if (${$str}) $values[] = trim($_REQUEST[${$str}]);
+      else break;
     }
     if ($values) return $values;
   }

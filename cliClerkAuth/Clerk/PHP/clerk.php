@@ -8,7 +8,17 @@ require_once $commonsPath.'f.php';
 
 require_once 'Auth/randhash.php';
 
-
+function Response($code, $type, $text, $data=null) {
+  switch ($type) {
+    case 'S': $type = 'SUCCESS';  break;
+    case 'F': $type = 'FAIL';     break;
+    case 'E': $type = 'ERROR';    break;
+    case 'I': $type = 'INFO';     break;
+  }
+  $msg = array('code'=>$code, 'type'=>$type, 'text'=>$text);
+  if ($data) return array('msg' => $msg, 'data' => $data);
+  else return array('msg' => $msg);
+}
 
 switch ($_REQUEST['task']) {
   case 'usercheck': {
@@ -27,29 +37,17 @@ switch ($_REQUEST['task']) {
     if ($login and $pass) {
       $q = "SELECT login FROM $tblUsers WHERE login = ?";
       $p = array(array($login, 's'));
-      if (f::getValue($db, $q, $p)) {
-        $response = array('msg'=>
-                          array('type'=>'FAILED', 'code'=>101,
-                                'text'=>"Login $login already occupied"));
-        echo json_encode($response);
-      }
+      if (f::getValue($db, $q, $p))
+        echo json_encode(Response(101, 'F', "Login $login already occupied"));
       else {
         $hash = hashStr($pass);
         $q = "INSERT $tblUsers (login, passhash) VALUES (?, ?)";
         $p = array(array($login, 's'), array($hash, 's'));
         f::execute($db, $q, $p);
-        $response = array('msg'=>
-                          array('type'=>'SUCCESS', 'code'=>100,
-                                'text'=>"User $login is registered!"));
-        echo json_encode($response);
+        echo json_encode(Response(100, 'S', "User $login is registered!"));
       }
     }
-    else {
-      $response = array('msg'=>
-                        array('type'=>'ERROR', 'code'=>102,
-                              'text'=>"Not enough data to register!"));
-      echo json_encode($response);
-    }
+    else echo json_encode(Response(102, 'E', "Not enough data to register!"));
   } break;
   case 'login': {
     list ($login, $pass) = f::request('login', 'pass');
@@ -71,37 +69,16 @@ switch ($_REQUEST['task']) {
           $p = array(array($userid,'i'), array($userid,'i'));
           f::execute($db, $q, $p);
 
-          $response = array('msg'=>
-                            array('type'=>'SUCCSESS', 'code'=>103,
-                                  'text'=>"You are signed in now as $login!"),
-                            'data'=>
-                            array('userid'=>$userid, 'token'=>$token,
-                                  'expire'=>$sessTime));
-          echo json_encode($response);
+          $data = array('userid'=>$userid,'token'=>$token,'expire'=>$sessTime);
+          echo json_encode(Response(103,'S',"You are signed in now as $login!",                           $data));
         }
-        else {
-          $response = array('msg'=>
-                          array('type'=>'FAILED', 'code'=>104,
-                                'text'=>"Can't sign in. Incorrect password!"));
-          echo json_encode($response);
-        }
-
-
-
+        else echo json_encode(Response(104, 'F',
+                                       "Can't sign in. Incorrect password!"));
       }
-      else {
-        $response = array('msg'=>
-                        array('type'=>'FAILED', 'code'=>105,
-                              'text'=>"Can't sign in. User $login not found!"));
-        echo json_encode($response);
-      }
+      else echo json_encode(Response(105, 'F',
+                                     "Can't sign in. User $login not found!"));
     }
-    else {
-      $response = array('msg'=>
-                        array('type'=>'ERROR', 'code'=>106,
-                              'text'=>"Not enough data to sign in!"));
-      echo json_encode($response);
-    }
+    else echo json_encode(Response(106, 'E', "Not enough data to sign in!"));
   } break;
   case 'check': {} break;
   case 'logout': {} break;
