@@ -100,12 +100,24 @@ class f
   # returns list of values for provided $_REQUEST keys
   static function request($str1=null, $str2=null, $str3=null, $str4=null,
                           $str5=null, $str6=null, $str7=null, $str8=null) {
+    $values = array();
     for ($i=1; $i<9; $i++) {
-      $str = 'str'.$i;
-      if (${$str}) $values[] = trim($_REQUEST[${$str}]);
+      $str = ${'str'.$i};
+      if ($str) $values[] = trim($_REQUEST[$str]);
       else break;
     }
     if ($values) return $values;
   }
 }
+
+function qp($p1=null, $t1=null, $p2=null, $t2=null, $p3=null, $t3=null,
+            $p4=null, $t4=null, $p5=null, $t5=null, $p6=null, $t6=null) {
+  for ($i=1; $i<7; $i++) {
+    $param = ${'p'.$i};   $type = ${'t'.$i};
+    if ($param and $type) $params[] = array($param, $type);
+    else break;
+  }
+  return $params;
+}
+
 ?>

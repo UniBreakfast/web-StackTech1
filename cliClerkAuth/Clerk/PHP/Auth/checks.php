@@ -17,12 +17,24 @@ function hashStr($str) {
     $chars = str_shuffle($chars);
     $salt .= $chars[rand(0, 60)];
   }
-  return substr(crypt($str, '$2a$10$'.$salt), 7);
+  return $str ? substr(crypt($str, '$2a$10$'.$salt), 7) : '';
 }
 
 function hashCheck($str, $hash) {
-  if ('$2a$10$'.$hash == crypt($str, '$2a$10$'.$hash)) return true;
-  else                                                 return false;
+  return !($str.$hash) || ('$2a$10$'.$hash == crypt($str, '$2a$10$'.$hash)) ?
+    true : false;
 }
+
+function bfp() {
+  global $checkIP, $checkAgent;
+  if ($checkIP) {
+    $addr = $_SERVER['REMOTE_ADDR'];
+    $addr = substr($addr, 0, strrpos($addr, '.'));
+  } else $addr = '';
+  $agent = $checkAgent ? $_SERVER['HTTP_USER_AGENT'] : '';
+  return $addr.$agent;
+}
+
+function bfpCheck($hash) { return hashCheck(bfp(), $hash); }
 
 ?>

@@ -6,7 +6,7 @@ require_once 'clerkvars.php';
 require_once $commonsPath.'krumo.php';
 require_once $commonsPath.'f.php';
 
-require_once 'Auth/randhash.php';
+require_once 'Auth/checks.php';
 
 function Response($code, $type, $text, $data=null) {
   switch ($type) {
@@ -21,54 +21,41 @@ function Response($code, $type, $text, $data=null) {
 }
 
 switch ($_REQUEST['task']) {
-  case 'usercheck': {
-    echo userCheck($db, $sessionTable);
-  } break;
-  case 'signin': {
-    require_once 'signin.php';
-    echo signIn($db, $userTable, $sessionTable);
-  } break;
-  case 'signout': {
-    require_once 'signout.php';
-    echo signOut($db, $sessionTable);
-  } break;
+
   case 'reg': {
     list ($login, $pass) = f::request('login', 'pass');
     if ($login and $pass) {
       $q = "SELECT login FROM $tblUsers WHERE login = ?";
-      $p = array(array($login, 's'));
-      if (f::getValue($db, $q, $p))
+      if (f::getValue($db, $q, qp($login,'s')))
         echo json_encode(Response(101, 'F', "Login $login already occupied"));
       else {
         $hash = hashStr($pass);
-        $q = "INSERT $tblUsers (login, passhash) VALUES (?, ?)";
-        $p = array(array($login, 's'), array($hash, 's'));
-        f::execute($db, $q, $p);
+        $q = "INSERT $tblUsers (login, passhash) VALUES (?, '$hash')";
+        f::execute($db, $q, qp($login,'s'));
         echo json_encode(Response(100, 'S', "User $login is registered!"));
       }
     }
     else echo json_encode(Response(102, 'E',
                                    "Not enough credentials to register!"));
   } break;
+
   case 'login': {
     list ($login, $pass) = f::request('login', 'pass');
     if ($login and $pass) {
       $q = "SELECT id, passhash FROM $tblUsers WHERE login = ?";
-      $p = array(array($login, 's'));
-      if (list ($userid, $hash) = f::getRecord($db, $q, $p)) {
+      if (list ($userid, $hash) = f::getRecord($db, $q, qp($login,'s'))) {
 
         if (hashCheck($pass, $hash)) {
           $token = randStr();
-          $q = "INSERT $tblSessions (user_id, token) VALUES (?, ?)";
-          $p = array(array($userid,'i'), array($token,'s'));
-          f::execute($db, $q, $p);
+          $q = "INSERT $tblSessions (user_id, token, bfp_hash)
+                VALUES ($userid, '$token', '".hashStr(bfp())."')";
+          f::execute($db, $q);
 
-          $q = "DELETE FROM $tblSessions WHERE user_id = ? AND dt_modify <
+          $q = "DELETE FROM $tblSessions WHERE user_id = $userid AND dt_modify <
                   (SELECT min(dt_modify) FROM
-                    (SELECT dt_modify FROM $tblSessions WHERE user_id = ?
+                    (SELECT dt_modify FROM $tblSessions WHERE user_id = $userid
                       ORDER BY dt_modify DESC LIMIT $sessNum) AS tmp)";
-          $p = array(array($userid,'i'), array($userid,'i'));
-          f::execute($db, $q, $p);
+          f::execute($db, $q);
 
           echo json_encode(Response(103,'S',"You are signed in now as $login!",
             array('userid'=>$userid, 'token'=>$token, 'expire'=>$sessExpire)));
@@ -82,17 +69,17 @@ switch ($_REQUEST['task']) {
     else echo json_encode(Response(106, 'E',
                                    "Not enough credentials to sign in!"));
   } break;
+
   case 'check': {
     list ($userid, $token) = f::request('userid', 'token');
     if ($userid and $token) {
-      $q = "SELECT id FROM $tblSessions WHERE user_id = ? AND token = ?
-            AND dt_modify > CURDATE() - INTERVAL $sessExpire DAY";
-      $p = array(array($userid, 'i'), array($token, 's'));
-      if ($id = f::getValue($db, $q, $p)) {
+      $q = "SELECT id, bfp_hash FROM $tblSessions WHERE user_id = ?
+      AND token = ? AND dt_modify > NOW() - INTERVAL $sessExpire DAY";
+      $p = qp($userid,'i', $token,'s');
+      if (list ($id, $bfp) = f::getRecord($db, $q, $p) and bfpCheck($bfp)) {
         $token = randStr();
-        $q = "UPDATE $tblSessions SET token = ? WHERE id = ?";
-        $p = array(array($token, 's'), array($id, 'i'));
-        f::execute($db, $q, $p);
+        $q = "UPDATE $tblSessions SET token = '$token' WHERE id = $id";
+        f::execute($db, $q);
         echo json_encode(Response(107, 'I', "Session confirmed, "
           ."you are signed in", array('token'=>$token, 'expire'=>$sessExpire)));
       }
@@ -101,29 +88,31 @@ switch ($_REQUEST['task']) {
     else echo json_encode(Response(110, 'E',
                                    "No complete session cookie provided"));
   } break;
+
   case 'logout': {
     list ($userid, $token) = f::request('userid', 'token');
     if ($userid and $token) {
-      $q = "DELETE FROM $tblSessions WHERE user_id = ? AND token = ?";
-      $p = array(array($userid, 'i'), array($token, 's'));
-      f::execute($db, $q, $p);
+      $q = "SELECT id, bfp_hash FROM $tblSessions WHERE user_id = ?
+      AND token = ?";
+      $p = qp($userid,'i', $token,'s');
+      if (list ($id, $bfp) = f::getRecord($db, $q, $p) and bfpCheck($bfp))
+        f::execute($db, "DELETE FROM $tblSessions WHERE id = $id");
     }
     else echo json_encode(Response(112, 'E',
                                    "No complete session cookie provided"));
   } break;
+
   case 'newpass': {
     list (       $login,  $oldpass,  $newpass ) =
       f::request('login', 'oldpass', 'newpass');
     if ($login and $oldpass and $newpass) {
       $q = "SELECT id, passhash FROM $tblUsers WHERE login = ?";
-      $p = array(array($login, 's'));
-      if (list ($userid, $hash) = f::getRecord($db, $q, $p)) {
+      if (list ($userid, $hash) = f::getRecord($db, $q, qp($login,'s'))) {
 
         if (hashCheck($oldpass, $hash)) {
           $hash = hashStr($newpass);
-          $q = "UPDATE $tblUsers SET passhash = ? WHERE id = ?";
-          $p = array(array($hash,'s'), array($userid,'i'));
-          f::execute($db, $q, $p);
+          $q = "UPDATE $tblUsers SET passhash = '$hash' WHERE id = $userid";
+          f::execute($db, $q);
           echo json_encode(Response(114, 'S',
                                     "Password changed for user $login"));
         }
@@ -136,18 +125,17 @@ switch ($_REQUEST['task']) {
     else echo json_encode(Response(117, 'E',
                                  "Not enough credentials to change password!"));
   } break;
+
   case 'rename': {
     list (       $oldlogin,  $pass,  $newlogin ) =
       f::request('oldlogin', 'pass', 'newlogin');
     if ($oldlogin and $pass and $newlogin) {
       $q = "SELECT id, passhash FROM $tblUsers WHERE login = ?";
-      $p = array(array($oldlogin, 's'));
-      if (list ($userid, $hash) = f::getRecord($db, $q, $p)) {
+      if (list ($userid, $hash) = f::getRecord($db, $q, qp($oldlogin, 's'))) {
 
         if (hashCheck($pass, $hash)) {
-          $q = "UPDATE $tblUsers SET login = ? WHERE id = ?";
-          $p = array(array($newlogin,'s'), array($userid,'i'));
-          f::execute($db, $q, $p);
+          $q = "UPDATE $tblUsers SET login = ? WHERE id = $userid";
+          f::execute($db, $q, qp($newlogin,'s'));
           echo json_encode(Response(118, 'S',
                                   "Login changed from $oldlogin to $newlogin"));
         }
@@ -160,17 +148,16 @@ switch ($_REQUEST['task']) {
     else echo json_encode(Response(121, 'E',
                                    "Not enough credentials to change login!"));
   } break;
+
   case 'unreg': {
     list ($login, $pass) = f::request('login', 'pass');
     if ($login and $pass) {
       $q = "SELECT id, passhash FROM $tblUsers WHERE login = ?";
-      $p = array(array($login, 's'));
-      if (list ($userid, $hash) = f::getRecord($db, $q, $p)) {
+      if (list ($userid, $hash) = f::getRecord($db, $q, qp($login,'s'))) {
 
         if (hashCheck($pass, $hash)) {
-          $q = "DELETE FROM $tblUsers WHERE id = ?";
-          $p = array(array($userid,'i'));
-          f::execute($db, $q, $p);
+          $q = "DELETE FROM $tblUsers WHERE id = $userid";
+          f::execute($db, $q);
           echo json_encode(Response(122,'S',"User $login removed!"));
         }
         else echo json_encode(Response(123, 'F',
@@ -182,6 +169,7 @@ switch ($_REQUEST['task']) {
     else echo json_encode(Response(125, 'E',
                                    "Not enough credentials to unregister!"));
   } break;
+
   default: {}
 }
 
