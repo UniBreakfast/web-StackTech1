@@ -1,5 +1,7 @@
 <?php
 
+# SERVER-SIDE OPTIONS OF clerk module
+
 # where to find f.php, krumo etc
 $commonsPath = '../../_Commons/PHP/';
 

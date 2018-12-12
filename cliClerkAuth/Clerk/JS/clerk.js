@@ -39,6 +39,7 @@ const clerk = (()=>{
         f.cookie.set('userid', userid,  d.expire);
         f.cookie.set('token',  d.token, d.expire);
       }
+      else if (drop_sess_on_deny) abandon(1);
       log(response);
     }, log);
     else log(new Response(109, 'F', 'No complete session cookie found'));
@@ -53,6 +54,12 @@ const clerk = (()=>{
       log(new Response(111, 'S', 'Signed out'));
     }
     else log(new Response(113, 'I', 'You are not signed in!'));
+  }
+
+  function abandon(silent) {
+    f.cookie.remove('userid');
+    f.cookie.remove('token');
+    if (!silent) log(new Response(126, 'S', 'Session cookies - no more!'));
   }
 
   function ChangePassword(login, oldpass, newpass) {
@@ -80,64 +87,32 @@ const clerk = (()=>{
     else log(new Response(125, 'E', 'Not enough credentials to unregister!'));
   }
 
-
-
-  const dt = {setPath,
-              SignUp, SignIn, isSignedIn, SignOut,
-              ChangePassword, ChangeLogin, UnRegister}
-
-  // exchange right login and password for userid and a token (newly created)
-  dt.signIn = function get_userId_and_token(login, password) {
-    let userid = f.cookie.get('userid'), token = f.cookie.get('token');
-    if (userid && token) {
-      log ('previous signin cookie found, going to check');
-      f.POST(`PHP/dt.php?task=usercheck&userid=${userid}&token=${token}`,
-             response => {
-        if (!response.startsWith('no ')) {
-          f.cookie.set('userid', userid,  2.5);
-          f.cookie.set('token', response, 2.5);
-          log('you are already signed in');
+  function getData(table, fields, own=0) {
+    const userid = f.cookie.get('userid'), token = f.cookie.get('token');
+    let creds = (userid && token) ?
+        '&userid='+userid+'&token='+token+'&own='+own : '';
+    f.POST(clerk_php+'?task=get'+'&table='+table+'&fields='+
+           JSON.stringify(fields)+creds, response => {
+      response = JSON.parse(response);      let d;
+      if (d = response.data) {
+        if (d.token) {
+          f.cookie.set('userid', userid,  d.expire);
+          f.cookie.set('token',  d.token, d.expire);
         }
-        else {
-          log('previous cookie check failed, going to sign in');
-          sign_in();
+        if (d.headers) {
+          log(d.headers);
+          log(d.rows);
         }
-      }, log);
-    }
-    else sign_in();
-
-    function sign_in() {
-      f.POST(`PHP/dt.php?task=signin&login=${login}&password=${password}`,
-             response => {
-        if (response.startsWith('[')) {
-          [userid, token] = JSON.parse(response);
-          f.cookie.set('userid', userid, 2.5);
-          f.cookie.set( 'token',  token, 2.5);
-          log('you are now signed in');
-        }
-        else {
-          log(response);
-        }
-      });
-    }
+      }
+      else if (drop_sess_on_deny) abandon(1);
+      log(response);
+    }, log);
   }
 
-  dt.signOut = function drop_current_session() {
-    let userid = f.cookie.get('userid'), token = f.cookie.get('token');
-    if (userid && token) {
-      log ('cookie found, going to signout');
-      f.POST(`PHP/dt.php?task=signout&userid=${userid}&token=${token}`,
-             response => {
-        if (response.startsWith('no%20')) log(response);
-        else {
-          f.cookie.remove('userid');
-          f.cookie.remove('token');
-          log(response);
-        }
-      }, log);
-    }
-    else log('you are not even signed in');
-  }
+  const clerk = {setPath,
+                 SignUp, SignIn, isSignedIn, SignOut, abandon,
+                 ChangePassword, ChangeLogin, UnRegister,
+                 getData}
 
-  return dt;
+  return clerk;
 })();

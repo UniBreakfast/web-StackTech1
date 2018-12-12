@@ -62,6 +62,12 @@ No complete session cookie provided
 INFO
 You are not signed in!
 
+Abandon() //////////////////////////////////////////////////////////////////////
+
+126
+SUCCESS
+Session cookies - no more!
+
 ChangePassword() ///////////////////////////////////////////////////////////////
 
 114
@@ -115,3 +121,21 @@ Can't unregister. No user with login $login found!
 125
 ERROR
 Not enough credentials to unregister!
+
+getData() //////////////////////////////////////////////////////////////////////
+
+127
+SUCCESS
+$rows records of $columns fields delivered
+
+128
+SUCCESS
+Query returned no data
+
+129
+FAIL
+No table $table available
+
+130
+FAIL
+Field(s) $wrong are not available in the $table table
