@@ -7,32 +7,36 @@ const f = {
   newEl: document.createElement .bind(document),
 
   // to request do f.request(type, url, callback, reportcb, falldata, fallcb)
-  request: function request(type, url, callback, reportcb, falldata, fallcb) {
-    const request = new XMLHttpRequest();
-    request.open(type, url, true);
-    request.onload = () => {
-      if (callback) {
-        if (request.status >= 200 && request.status < 400) {
-          if (!request.response.startsWith('<?php')) {
-            if (request.response !== '') callback(request.response);
-            else callback();
+  request: function request(type, url, cb, reportcb, falldata, fallcb, simonly) {
+  if (simonly) falldata ? fallcb(falldata) : fallcb();
+  else {
+    const xhr = new XMLHttpRequest();
+    xhr.open(type, url, true);
+    xhr.onload = () => {
+      if (fallcb) falldata ? fallcb(falldata) : fallcb();
+      else if (cb) {
+        if (xhr.status >= 200 && xhr.status < 400) {
+          if (!xhr.response.startsWith('<?php')) {
+            if (xhr.response !== '') cb(xhr.response);
+            else cb() || reportcb ? reportcb('php-response was empty') :0 ;
           }
           else if (reportcb)
-            reportcb('php file content returned instead of php-response');
+            reportcb('php-file content returned instead of php-response');
         }
         else {
-          if (reportcb) reportcb('request.status is ' + request.status);
-          falldata ? callback(falldata) : callback();
+          if (reportcb)
+            reportcb('unfortunately request.status is ' + xhr.status);
+          falldata ? cb(falldata) : cb();
         }
       }
-      else if (fallcb) falldata ? fallcb(falldata) : fallcb();
     }
-    request.onerror =
+    xhr.onerror =
       e => reportcb(type + ' request to '+ url + ' produced ' + e);
-    request.ontimeout =
+    xhr.ontimeout =
       () => reportcb(type + ' request to '+ url + ' timed out!');
-    request.send();
-  },
+    xhr.send();
+  }
+},
 
   // add style tag (with optional id) made from string to the head
   link_string_as_style_tag: (css, id) => {
