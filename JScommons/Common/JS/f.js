@@ -27,7 +27,8 @@ const f = {
           }
           else {
             if (reportcb)
-              reportcb('unfortunately request.status is ' + xhr.status);
+              reportcb('unfortunately request.status is ' + xhr.status+
+                       ' '+xhr.statusText);
             falldata ? cb(falldata) : cb();
           }
         }
